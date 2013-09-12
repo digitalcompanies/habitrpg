@@ -1,12 +1,11 @@
 "use strict";
 
 window.habitrpg = angular.module('habitrpg',
-    ['ngRoute', 'ngResource', 'ngSanitize', 'userServices', 'groupServices', 'memberServices', 'sharedServices', 'authServices', 'notificationServices', 'guideServices', 'ui.bootstrap', 'ui.keypress'])
+    ['ngRoute', 'ngResource', 'ngSanitize', 'ui.bootstrap', 'ui.keypress',
+      'syncServices', 'authServices', 'userServices', 'groupServices', 'memberServices', 'sharedServices', 'notificationServices', 'guideServices',])
 
-  .constant("API_URL", "")
   .constant("STORAGE_USER_ID", 'habitrpg-user')
   .constant("STORAGE_SETTINGS_ID", 'habit-mobile-settings')
-  //.constant("STORAGE_GROUPS_ID", "") // if we decide to take groups offline
 
   .config(['$routeProvider', '$httpProvider', 'STORAGE_SETTINGS_ID',
     function($routeProvider, $httpProvider, STORAGE_SETTINGS_ID) {
@@ -17,14 +16,10 @@ window.habitrpg = angular.module('habitrpg',
 
         .otherwise({redirectTo: '/tasks'});
 
-      var settings = JSON.parse(localStorage.getItem(STORAGE_SETTINGS_ID));
-      if (settings && settings.auth) {
-        $httpProvider.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
-        $httpProvider.defaults.headers.common['x-api-user'] = settings.auth.apiId;
-        $httpProvider.defaults.headers.common['x-api-key'] = settings.auth.apiToken;
-      }
+      $httpProvider.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
 
       // Handle errors
+      // FIXME make a proper errorNotificationServices service
       var interceptor = ['$rootScope', '$q', function ($rootScope, $q) {
         function success(response) {
           return response;

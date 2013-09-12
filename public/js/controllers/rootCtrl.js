@@ -30,7 +30,6 @@ habitrpg.controller("RootCtrl", ['$scope', '$rootScope', '$location', 'User', '$
     _.defaults($rootScope, window.habitrpgShared.helpers);
 
     $rootScope.set = User.set;
-    $rootScope.authenticated = User.authenticated;
 
     $rootScope.dismissAlert = function() {
       $rootScope.modals.newStuff = false;

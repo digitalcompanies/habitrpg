@@ -4,11 +4,10 @@
  The authentication controller (login & facebook)
  */
 
-habitrpg.controller("AuthCtrl", ['$scope', '$rootScope', 'User', '$http', '$location', 'API_URL',
-  function($scope, $rootScope, User, $http, $location, API_URL) {
-    var runAuth;
+habitrpg.controller("AuthCtrl", ['$scope', '$rootScope', 'User', '$http', '$location', 'API_URL', 'Auth',
+  function($scope, $rootScope, User, $http, $location, API_URL, Auth) {
     var showedFacebookMessage;
-
+    $scope.Auth = Auth;
     $scope.useUUID = false;
     $scope.toggleUUID = function() {
       if (showedFacebookMessage === false) {
@@ -18,79 +17,27 @@ habitrpg.controller("AuthCtrl", ['$scope', '$rootScope', 'User', '$http', '$loca
       $scope.useUUID = !$scope.useUUID;
     };
 
-    $scope.logout = function() {
-      localStorage.clear();
-      window.location.href = '/logout';
-    };
-
-    runAuth = function(id, token) {
-      User.authenticate(id, token, function(err) {
-        window.location.href = '/';
-        //$rootScope.modals.login = false;
-      });
-    };
-
     $scope.register = function() {
-      /*TODO highlight invalid inputs
-       we have this as a workaround for https://github.com/HabitRPG/habitrpg-mobile/issues/64
-       */
-      if ($scope.registrationForm.$invalid) {
-        return;
-      }
-      $http.post(API_URL + "/api/v1/register", $scope.registerVals).success(function(data, status, headers, config) {
-        runAuth(data.id, data.apiToken);
-      }).error(function(data, status, headers, config) {
-          if (status === 0) {
-            alert("Server not currently reachable, try again later");
-          } else if (!!data && !!data.err) {
-            alert(data.err);
-          } else {
-            alert("ERROR: " + status);
-          }
-        });
+      //TODO highlight invalid inputs
+       //we have this as a workaround for https://github.com/HabitRPG/habitrpg-mobile/issues/64
+      if ($scope.registrationForm.$invalid) return;
+      Auth.register($scope.registerVals, true);
     };
 
-    function errorAlert(data, status, headers, config) {
-      if (status === 0) {
-        alert("Server not currently reachable, try again later");
-      } else if (!!data && !!data.err) {
-        alert(data.err);
-      } else {
-        alert("ERROR: " + status);
-      }
-    }
-
-    $scope.auth = function() {
-      var data = {
-        username: $scope.loginUsername,
-        password: $scope.loginPassword
-      };
-      if ($scope.useUUID) {
-        runAuth($scope.loginUsername, $scope.loginPassword);
-      } else {
-        $http.post(API_URL + "/api/v1/user/auth/local", data)
-          .success(function(data, status, headers, config) {
-            runAuth(data.id, data.token);
-          }).error(errorAlert);
-      }
+    $scope.authenticate = function() {
+      var id = $scope.loginUsername;
+      var token = $scope.loginPassword;
+      var authFn = ($scope.useUUID) ? Auth.authenticate : Auth.login;
+      authFn(id, token, true);
     };
 
     $scope.playButtonClick = function(){
-      if (User.authenticated()) {
+      if (Auth.authenticated()) {
         window.location.href = '/#/tasks';
       } else {
         $('#login-modal').modal('show');
       }
     }
 
-    $scope.passwordReset = function(email){
-      $http.post(API_URL + '/api/v1/user/reset-password', {email:email})
-        .success(function(){
-          alert('New password sent.');
-        })
-        .error(function(data){
-          alert(data.err);
-        });
-    }
   }
 ]);
