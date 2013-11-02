@@ -8,6 +8,7 @@ var helpers = require('habitrpg-shared/script/helpers');
 var items = require('habitrpg-shared/script/items');
 var User = require('./../models/user').model;
 var Group = require('./../models/group').model;
+var Challenge = require('./../models/challenge').model;
 var api = module.exports;
 
 /*
@@ -104,29 +105,48 @@ api.get = function(req, res) {
   var user = res.locals.user;
   var gid = req.params.gid;
 
-  // This will be called for the header, we need extra members' details than usuals
-  if (gid == 'party') {
-    Group.findOne({type: 'party', members: {'$in': [user._id]}})
-      .populate('members', partyFields)
-      .populate('invites', nameFields)
-      .populate('challenges', challengeFields)
-      .exec(function(err, group){
-        if (err) return res.json(500,{err:err});
-        res.json(group);
-      });
-  } else {
-    Group.findById(gid)
-      .populate('members', partyFields)
-      .populate('invites', nameFields)
-      .populate('challenges', challengeFields)
-      .exec(function(err, group){
-        if ( (group.type == 'guild' && group.privacy == 'private') || group.type == 'party') {
-          if(!_.find(group.members, {_id: user._id}))
-            return res.json(401, {err: "You don't have access to this group"});
+  // Experimenting with NOT using .populate(), but instead running a query of our own. I'm doing some digging around
+  // to see what populate()'s performance is like, and not finding anything definitive - but my hunch is that it actually
+  // performs one query *for every* subdocument, rather than collecting the ids as an array and running a reverse query
+  // (which is what I'm doing now). Restore back to 74e4ef0 for reference
+
+  var group;
+  async.waterfall([
+    function(cb){
+      var q = (gid == 'party') ? {type: 'party', members: {'$in': [user._id]}} : {_id: gid};
+      Group.findOne(q, cb);
+    },
+    function(_group, cb) {
+      group = _group;
+      if (!group) return cb(null);
+      async.parallel([
+        function(cb2){
+          // Party members will show in the header, so we need more details than usual
+          User.find({_id: {$in: group.members}}, cb2);
+        },
+        function(cb2){
+          User.find({_id: {$in: group.invites}}).select(nameFields).exec(cb2);
+        },
+        function(cb2){
+          Challenge.find({group: group._id}).select(challengeFields).exec(cb2);
         }
-        res.json(group);
-      });
-  }
+      ], cb)
+    }
+  ], function(err, results){
+    if (err) return res.json(500, {err:err});
+    if (!_.isEmpty(group)) {
+      if ( (group.type == 'guild' && group.privacy == 'private') || group.type == 'party') {
+        if(!~group.members.indexOf(user._id)) return res.json(401, {err: "You don't have access to this group"});
+        group = group.toJSON();
+        group.members = results[0];
+        group.invites = results[1];
+        group.challenegs = results[2];
+      }
+      res.json(group);
+    } else {
+      res.json(404, {err: "Group not found."});
+    }
+  })
 };
 
 
