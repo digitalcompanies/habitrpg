@@ -8,7 +8,7 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 var helpers = require('habitrpg-shared/script/helpers');
 var _ = require('lodash');
-var TaskSchema = require('./task').schema;
+var TaskEmbed = require('./task');
 
 // User Schema
 // -----------
@@ -191,10 +191,10 @@ var UserSchema = new Schema({
 
   challenges: [{type: 'String', ref:'Challenge'}],
 
-  habits: [TaskSchema],
-  dailys: [TaskSchema],
-  todos: [TaskSchema],
-  rewards: [TaskSchema],
+  habits: [TaskEmbed.HabitEmbed],
+  dailys: [TaskEmbed.DailyEmbed],
+  todos: [TaskEmbed.TodoEmbed],
+  rewards: [TaskEmbed.RewardEmbed],
 
 }, {
   strict: true,
@@ -209,12 +209,14 @@ UserSchema.methods.toJSON = function() {
   doc.filters = {};
   doc._tmp = this._tmp; // be sure to send down drop notifs
 
-  // TODO why isnt' this happening automatically given the TaskSchema.methods.toJSON above?
+  // We want to move everything on the front-end to task._id, since that's how mongo will store it (task.id is legacy
+  // derby storage). However, mobile and many other 3rd party applications depend on task.id. For now, just set id = _id
+  // and send down both. We'll start migrating to _id officially, and we'll notify our 3rd parties
   _.each(['habits','dailys','todos','rewards'], function(type){
     _.each(doc[type],function(task){
       task.id = task._id;
-    })
-  })
+    });
+  });
 
   return doc;
 };

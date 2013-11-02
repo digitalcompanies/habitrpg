@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 var helpers = require('habitrpg-shared/script/helpers');
 var _ = require('lodash');
-var TaskSchema = require('./task').schema;
+var TaskEmbed = require('./task');
 var Group = require('./group').model;
 
 var ChallengeSchema = new Schema({
@@ -10,10 +10,10 @@ var ChallengeSchema = new Schema({
   name: String,
   shortName: String,
   description: String,
-  habits: [TaskSchema],
-  dailys: [TaskSchema],
-  todos: [TaskSchema],
-  rewards: [TaskSchema],
+  habits: [TaskEmbed.HabitEmbed],
+  dailys: [TaskEmbed.DailyEmbed],
+  todos: [TaskEmbed.TodoEmbed],
+  rewards: [TaskEmbed.RewardEmbed],
   leader: {type: String, ref: 'User'},
   group: {type: String, ref: 'Group'},
   timestamp: {type: Date, 'default': Date.now},
@@ -39,11 +39,6 @@ ChallengeSchema.methods.toJSON = function(){
   var doc = this.toObject();
   doc.memberCount = doc.members ? _.size(doc.members) : doc.memberCount; // @see pre('save') comment above
   doc._isMember = this._isMember;
-  _.each(['habits','dailys','todos','rewards'], function(type){
-    _.each(doc[type],function(task){
-      task.id = task._id;
-    })
-  })
   return doc;
 }
 

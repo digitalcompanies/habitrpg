@@ -1,4 +1,4 @@
-li(ng-repeat='task in obj[list.type+"s"]', class='task {{taskClasses(task, user.filters, user.preferences.dayStart, user.lastCron, list.showCompleted, main)}}', data-id='{{task.id}}')
+li(ng-repeat='task in obj[list.type+"s"]', class='task {{taskClasses(task, user.filters, user.preferences.dayStart, user.lastCron, list.showCompleted, main)}}')
   // right-hand side control buttons
   .task-meta-controls
 
@@ -30,7 +30,7 @@ li(ng-repeat='task in obj[list.type+"s"]', class='task {{taskClasses(task, user.
         i.icon-trash
 
     // chart
-    a(ng-show='task.history', ng-click='toggleChart(obj._id+task.id, task)', tooltip='Progress')
+    a(ng-show='task.history', ng-click='toggleChart(obj._id+task._id, task)', tooltip='Progress')
       i.icon-signal
     // notes
     span.task-notes(ng-show='task.notes && !task._editing', popover-trigger='mouseenter', popover-placement='left', popover='{{task.notes}}', popover-title='{{task.text}}')
@@ -53,9 +53,9 @@ li(ng-repeat='task in obj[list.type+"s"]', class='task {{taskClasses(task, user.
 
     // Daily & Todos
     span.task-checker.action-yesno(ng-if='task.type=="daily" || task.type=="todo"')
-      input.visuallyhidden.focusable(ng-if='$state.includes("tasks")',  id='box-{{obj._id}}_{{task.id}}', type='checkbox', ng-model='task.completed', ng-change='changeCheck(task)')
-      input.visuallyhidden.focusable(ng-if='!$state.includes("tasks")', id='box-{{obj._id}}_{{task.id}}', type='checkbox')
-      label(for='box-{{obj._id}}_{{task.id}}')
+      input.visuallyhidden.focusable(ng-if='$state.includes("tasks")',  id='box-{{obj._id}}_{{task._id}}', type='checkbox', ng-model='task.completed', ng-change='changeCheck(task)')
+      input.visuallyhidden.focusable(ng-if='!$state.includes("tasks")', id='box-{{obj._id}}_{{task._id}}', type='checkbox')
+      label(for='box-{{obj._id}}_{{task._id}}')
   // main content
   p.task-text
     | {{task.text}}
@@ -104,11 +104,11 @@ li(ng-repeat='task in obj[list.type+"s"]', class='task {{taskClasses(task, user.
       fieldset.option-group(ng-if='task.type=="habit" && !task.challenge.id')
         legend.option-title Direction/Actions
         span.task-checker.action-plusminus.select-toggle
-          input.visuallyhidden.focusable(id='{{obj._id}}_{{task.id}}-option-plus', type='checkbox', ng-model='task.up')
-          label(for='{{obj._id}}_{{task.id}}-option-plus')
+          input.visuallyhidden.focusable(id='{{obj._id}}_{{task._id}}-option-plus', type='checkbox', ng-model='task.up')
+          label(for='{{obj._id}}_{{task._id}}-option-plus')
         span.task-checker.action-plusminus.select-toggle
-          input.visuallyhidden.focusable(id='{{obj._id}}_{{task.id}}-option-minus', type='checkbox', ng-model='task.down')
-          label(for='{{obj._id}}_{{task.id}}-option-minus')
+          input.visuallyhidden.focusable(id='{{obj._id}}_{{task._id}}-option-minus', type='checkbox', ng-model='task.down')
+          label(for='{{obj._id}}_{{task._id}}-option-minus')
 
       // if Daily, calendar
       // FIXME display, but disable for challenge tasks
@@ -159,4 +159,4 @@ li(ng-repeat='task in obj[list.type+"s"]', class='task {{taskClasses(task, user.
             input.option-content(type='number', ng-model='task.streak')
       button.task-action-btn.tile.spacious(type='submit') Save & Close
 
-  div(class='{{obj._id}}{{task.id}}-chart', ng-show='charts[obj._id+task.id]')
+  div(class='{{obj._id}}{{task._id}}-chart', ng-show='charts[obj._id+task._id]')
