@@ -4,6 +4,7 @@ var _ = require('lodash');
 var nconf = require('nconf');
 var async = require('async');
 var algos = require('habitrpg-shared/script/algos');
+var async = require('async');
 var helpers = require('habitrpg-shared/script/helpers');
 var items = require('habitrpg-shared/script/items');
 var User = require('./../models/user').model;
@@ -56,11 +57,19 @@ api.get = function(req, res) {
   // 1) Find the sum of users.tasks.values within the challnege (eg, {'profile.name':'tyler', 'sum': 100})
   // 2) Sort by the sum
   // 3) Limit 30 (only show the 30 users currently in the lead)
-  Challenge.findById(req.params.cid)
-    .populate('members', 'profile.name _id')
+  var cid = req.params.cid;
+  Challenge.findById(cid)
+    .populate({
+      path: 'members',
+      select: 'profile.name _id challengeScores.' + cid,
+      options: {
+        sort: [['challengeScores.' + cid, -1]]
+        //limit: 15
+      }
+    })
     .exec(function(err, challenge){
       if(err) return res.json(500, {err:err});
-      if (!challenge) return res.json(404, {err: 'Challenge ' + req.params.cid + ' not found'});
+      if (!challenge) return res.json(404, {err: 'Challenge ' + cid + ' not found'});
       res.json(challenge);
     })
 }

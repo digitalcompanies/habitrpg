@@ -116,7 +116,7 @@ api.scoreTask = function(req, res, next) {
   }
   var delta = algos.score(user, task, direction);
   //user.markModified('flags');
-  user.save(function(err, saved) {
+  user.syncScoreToChallenge(task, delta, function(err, saved) {
     if (err) return res.json(500, {err: err});
     res.json(200, _.extend({
       delta: delta
@@ -124,7 +124,6 @@ api.scoreTask = function(req, res, next) {
   });
 
   // if it's a challenge task, sync the score
-  user.syncScoreToChallenge(task, delta);
 };
 
 /**
@@ -328,10 +327,12 @@ api.updateUser = function(req, res, next) {
 api.cron = function(req, res, next) {
   var user = res.locals.user;
   algos.cron(user);
+  //FIXME sync scores to challenge
   if (user.isModified()) {
     res.locals.wasModified = true;
     user.auth.timestamps.loggedin = new Date();
   }
+  //TODO do we need to save each time?
   user.save(next);
 };
 

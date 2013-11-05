@@ -8,6 +8,7 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 var helpers = require('habitrpg-shared/script/helpers');
 var _ = require('lodash');
+var async = require('async');
 var TaskSchema = require('./task').schema;
 var Challenge = require('./challenge').model;
 
@@ -188,6 +189,7 @@ var UserSchema = new Schema({
   ],
 
   challenges: [{type: 'String', ref:'Challenge'}],
+  challengeScores: Schema.Types.Mixed, // {cid: value}
 
   habits: [TaskSchema],
   dailys: [TaskSchema],
@@ -242,18 +244,35 @@ UserSchema.pre('save', function(next) {
   next();
 });
 
-UserSchema.methods.syncScoreToChallenge = function(task, delta){
-  if (!task.challenge || !task.challenge.id || task.challenge.broken) return;
-  if (task.type == 'reward') return; // we don't want to update the reward GP cost
+UserSchema.methods.syncScoreToChallenge = function(task, delta, cb){
   var self = this;
-  Challenge.findById(task.challenge.id, function(err, chal){
-    if (err) throw err;
-    var t = chal.tasks[task.id];
-    if (!t) return chal.syncToUser(self); // this task was removed from the challenge, notify user
-    t.value += delta;
-    t.history.push({value: t.value, date: +new Date});
-    chal.save();
-  });
+  var cid = task.challenge && task.challenge.id;
+  if (!cid || task.challenge.broken) return self.save(cb);
+  if (task.type == 'reward') return self.save(cb); // we don't want to update the reward GP cost
+  async.waterfall([
+    function(cb2){
+      Challenge.findById(cid, cb2);
+    },
+    function(chal, cb2){
+      var t = chal.tasks[task.id];
+      if (!t) return chal.syncToUser(self, cb2); // this task was removed from the challenge, notify user
+      if (delta) {
+        t.value += delta;
+        t.history.push({value: t.value, date: +new Date});
+      }
+      chal.save(function(err, saved){
+        if (err) return cb2(err);
+        // Aggregate user's score for this challenge
+        self.challengeScores = self.challengeScores || {};
+        self.challengeScores[cid] = _.reduce(
+          _.filter(self.tasks, function(task){return task.type!='reward' && task.challenge && task.challenge.id==cid;}),
+          function(m,v){return m += v.value;}
+        , 0);
+        self.markModified('challengeScores.' + cid);
+        self.save(cb2);
+      });
+    }
+  ], cb);
 }
 
 UserSchema.methods.unlink = function(options, cb) {
@@ -274,6 +293,10 @@ UserSchema.methods.unlink = function(options, cb) {
       });
       break;
     case 'remove-all':
+      // remove the tag
+      var i = _.findIndex(self.tags, {id:cid});
+      if (~i) self.tags.splice(i,1);
+      // remove the tasks
       _.each(self.tasks, function(t){
         if (t.challenge && t.challenge.id == cid) {
           self.deleteTask(t.id);

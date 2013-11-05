@@ -41,9 +41,11 @@ script(type='text/ng-template', id='partials/options.social.challenges.detail.ht
 
   // Member List
   div(ng-if='challenge.members.length > 0')
+
+    i.icon-question-sign.pull-left(popover='Sorted by "Who\'s in the lead", formatted as "Name (Total Score)"', popover-trigger='mouseenter')
     h3 How's Everyone Doing?
     menu
-      button.customize-option(ng-repeat='member in challenge.members', ng-click='toggleMember(challenge._id, member._id)') {{member.profile.name}}
+      button.customize-option(ng-repeat='member in challenge.members', ng-click='toggleMember(challenge._id, member._id)') {{member.profile.name}} ({{member.challengeScores[challenge._id] || 0 | number:0}})
   div(ui-view)
 
   // Accordion version if we choose that instead
