@@ -1,4 +1,6 @@
-li(ng-repeat='task in obj[list.type+"s"]', class='task {{taskClasses(task, user.filters, user.preferences.dayStart, user.lastCron, list.showCompleted, main)}}', data-id='{{task.id}}')
+// TODO which of these two options will be more performant based on $digest?
+//li(ng-repeat='task in obj[list.type+"s"] | filter:todosFilter:this', class='task {{taskClasses(task, user.filters, user.preferences.dayStart, user.lastCron, list.showCompleted, main)}}', data-id='{{task.id}}')
+li(ng-repeat='task in obj[list.type+"s"] | filter:{completed: (task.type == "todo" || list.showCompleted)}', class='task {{taskClasses(task, user.filters, user.preferences.dayStart, user.lastCron, list.showCompleted, main)}}', data-id='{{task.id}}')
   // right-hand side control buttons
   .task-meta-controls
 
