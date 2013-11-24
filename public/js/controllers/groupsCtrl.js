@@ -298,9 +298,10 @@ habitrpg.controller("GroupsCtrl", ['$scope', '$rootScope', 'Groups', '$http', 'A
     }
   ])
 
-  .controller("TavernCtrl", ['$scope', 'Groups', 'User',
-    function($scope, Groups, User) {
+  .controller("TavernCtrl", ['$scope', 'Groups', 'User', 'Statistics',
+    function($scope, Groups, User, Stats) {
       $scope.group = Groups.tavern();
+      $scope.stats = Stats;
       $scope.rest = function(){
         User.user.flags.rest = !User.user.flags.rest;
         User.log({op:'set',data:{'flags.rest':User.user.flags.rest}});
