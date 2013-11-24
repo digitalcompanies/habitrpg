@@ -1,0 +1,13 @@
+// ------ General statistics -------
+.modal(style='position: relative;top: auto;left: auto;right: auto;margin: 0 auto 20px;z-index: 1;max-width: 100%;')
+  .modal-header
+    h3
+      | General statistics
+  .modal-body(bindonce='stats')
+    div()
+      table.table.table-striped
+        tr(ng-repeat='stat in stats')
+          td
+            | {{ stat.name }}
+          td
+            | {{ stat.value }}
