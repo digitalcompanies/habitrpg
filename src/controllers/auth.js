@@ -8,6 +8,7 @@ var async = require('async');
 var utils = require('../utils');
 var nconf = require('nconf');
 var User = require('../models/user').model;
+var Stats = require('../models/stats').model;
 
 var api = module.exports;
 
@@ -96,6 +97,7 @@ api.registerUser = function(req, res, next) {
       newUser.auth.local.hashed_password = utils.encryptPassword(password, salt);
       user = new User(newUser);
       user.save(cb);
+      Stats.updateStats(); // async in background
     }
   ], function(err, saved) {
     if (err) {
