@@ -1,9 +1,13 @@
 .header-wrap(ng-controller='HeaderCtrl')
-  a.label.undo-button(x-bind='click:undo', ng-show='_undo')=env.t('undo')
   div(ng-if='!user.preferences.hideHeader')
     include menu
 
   header.site-header(ng-hide='user.preferences.hideHeader', role='banner', data-partysize='{{party.members.length>1 ? truarr(party.members.length) : 0}}')
+
+    .undo-button(ng-click='User.undo()', ng-show='User.undoTimer')
+      i.icon-repeat&nbsp;
+      =env.t('undo')
+
     // avatar
     .herobox-wrap.main-herobox(ng-controller='UserCtrl')
       include avatar
