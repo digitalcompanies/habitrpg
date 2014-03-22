@@ -381,6 +381,7 @@ api.buyGemsPaypalIPN = function(req, res, next) {
   res.send(200);
   ipn.verify(req.body, function callback(err, msg) {
     if (err) return next('PayPal Error: ' + msg);
+
     if (req.body.payment_status == 'Completed') {
       //Payment has been confirmed as completed
       var parts = url.parse(req.body.custom, true);
@@ -389,14 +390,24 @@ api.buyGemsPaypalIPN = function(req, res, next) {
       User.findById(uid, function(err, user) {
         if (_.isEmpty(user)) err = "user not found with uuid " + uuid + " when completing paypal transaction";
         if (err) return nex(err);
-        user.balance += 5;
-        user.txnCount++;
-        //user.purchased.ads = true;
-        user.save();
-        logging.info('PayPal transaction completed and user updated');
-        ga.event('checkout', 'PayPal').send()
-        ga.transaction(req.body.txn_id, 5).item(5, 1, "paypal-checkout", "Gems > PayPal").send()
+
+        if (req.body.txn_type == 'subscr_payment') {
+          //subscr_id, see http://thereforei.am/2012/07/03/cancelling-subscriptions-created-with-paypal-standard-via-the-express-checkout-api/
+          // TODO Create plan
+
+        } else if (req.body.txn_type == 'web_accept') {
+          user.balance += 5;
+          user.txnCount++;
+          //user.purchased.ads = true;
+          user.save();
+          logging.info('PayPal transaction completed and user updated');
+          ga.event('checkout', 'PayPal').send()
+          ga.transaction(req.body.txn_id, 5).item(5, 1, "paypal-checkout", "Gems > PayPal").send()
+        }
       });
+
+    } else if (req.body.txn_type == 'subscr_cancel') {
+
     }
   });
 }

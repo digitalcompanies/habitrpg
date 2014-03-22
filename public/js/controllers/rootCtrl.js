@@ -100,7 +100,7 @@ habitrpg.controller("RootCtrl", ['$scope', '$rootScope', '$location', 'User', '$
       //debugger
       var data = {
         name:env.t('donationDesc'),
-        //env:window.env.NODE_ENV == 'production' ? '' : 'sandbox',
+        env:window.env.NODE_ENV == 'production' ? '' : 'sandbox',
         quantity:1,
         amount:5,
         currency:'USD',
@@ -112,6 +112,26 @@ habitrpg.controller("RootCtrl", ['$scope', '$rootScope', '$location', 'User', '$
         no_shipping:1
       };
       PAYPAL.apps.ButtonFactory.create(window.env.PAYPAL_MERCHANT, data, 'buynow', document.getElementById('custom-paypal-button'));
+    }
+
+    $rootScope.initPayPalSubscribe = function($event){
+      var data = {
+        name:"HabitRPG Subscription",
+        env:window.env.NODE_ENV == 'production' ? '' : 'sandbox',
+        a3: 5,
+        p3: 1,
+        t3: 'M',
+        src: 1,
+
+        currency:'USD',
+        tax:0,
+        callback:window.env.BASE_URL + '/api/v2/user/buy-gems/paypal-ipn',
+        custom:'?uid='+User.user._id + '&apiToken=' + User.user.apiToken,
+        'return':window.env.BASE_URL,
+        rm:1,
+        no_shipping:1
+      };
+      PAYPAL.apps.ButtonFactory.create(window.env.PAYPAL_MERCHANT, data, 'subscribe', document.getElementById('paypal-subscribe-button'));
     }
 
     $rootScope.showStripe = function(subscription) {

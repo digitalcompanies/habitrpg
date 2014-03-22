@@ -8,9 +8,9 @@ var logging = require('./logging');
 var isProd = nconf.get('NODE_ENV') === 'production';
 var isDev = nconf.get('NODE_ENV') === 'development';
 
-if (cluster.isMaster && (isDev || isProd)) {
+if (false) {
   // Fork workers.
-  _.times(_.min([require('os').cpus().length,2]), function(){
+  _.times(_.min([require('os').cpus().length,1]), function(){
     cluster.fork();
   });
 
