@@ -1,4 +1,4 @@
-li(bindonce='list', bo-id='"task-"+task.id', ng-repeat='task in obj[list.type+"s"]', class='task {{Shared.taskClasses(task, user.filters, user.preferences.dayStart, user.lastCron, list.showCompleted, main)}}', ng-click='spell && (list.type != "reward") && castEnd(task, "task", $event)', ng-class='{"cast-target":spell && (list.type != "reward")}', popover-trigger='mouseenter', data-popover-html="{{task.notes | markdown}}", data-popover-placement="top", ng-show='shouldShow(task, list, user.preferences)')
+li(bindonce='list', bo-id='"task-"+task.id', ng-repeat='task in obj[list.type+"s"] track by task.id | toArray | orderBy:"sort"', class='task {{Shared.taskClasses(task, user.filters, user.preferences.dayStart, user.lastCron, list.showCompleted, main)}}', ng-click='spell && (list.type != "reward") && castEnd(task, "task", $event)', ng-class='{"cast-target":spell && (list.type != "reward")}', popover-trigger='mouseenter', data-popover-html="{{task.notes | markdown}}", data-popover-placement="top", ng-show='shouldShow(task, list, user.preferences)')
   // right-hand side control buttons
   .task-meta-controls
 
@@ -43,7 +43,7 @@ li(bindonce='list', bo-id='"task-"+task.id', ng-repeat='task in obj[list.type+"s
           span.glyphicon.glyphicon-bullhorn(tooltip=env.t('challenge'))
           | &nbsp;
       // delete
-      a(ng-if='!task.challenge.id', ng-click='removeTask(obj[list.type+"s"], $index)', tooltip=env.t('delete'))
+      a(ng-if='!task.challenge.id', ng-click='removeTask(task)', tooltip=env.t('delete'))
         span.glyphicon.glyphicon-trash
         | &nbsp;
 
