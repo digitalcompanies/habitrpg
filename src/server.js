@@ -65,11 +65,11 @@ if (cluster.isMaster && (isDev || isProd)) {
   //   have a database of user records, the complete Facebook profile is serialized
   //   and deserialized.
   passport.serializeUser(function(user, done) {
-      done(null, user);
+    done(null, user);
   });
 
   passport.deserializeUser(function(obj, done) {
-      done(null, obj);
+    done(null, obj);
   });
 
   // Use the FacebookStrategy within Passport.
@@ -77,22 +77,11 @@ if (cluster.isMaster && (isDev || isProd)) {
   //   credentials (in this case, an accessToken, refreshToken, and Facebook
   //   profile), and invoke a callback with a user object.
   passport.use(new FacebookStrategy({
-      clientID: nconf.get("FACEBOOK_KEY"),
-      clientSecret: nconf.get("FACEBOOK_SECRET"),
-      callbackURL: nconf.get("BASE_URL") + "/auth/facebook/callback"
-  },
-    function(accessToken, refreshToken, profile, done) {
-        // asynchronous verification, for effect...
-        //process.nextTick(function () {
-
-        // To keep the example simple, the user's Facebook profile is returned to
-        // represent the logged-in user.  In a typical application, you would want
-        // to associate the Facebook account with a user record in your database,
-        // and return that user instead.
-        return done(null, profile);
-        //});
-    }
-   ));
+    clientID: nconf.get("FACEBOOK_KEY"),
+    clientSecret: nconf.get("FACEBOOK_SECRET"),
+    callbackURL: nconf.get("BASE_URL") + "/auth/facebook/callback",
+    passReqToCallback: true
+  }, require('./controllers/auth').facebookStrategy));
 
   // ------------  Server Configuration ------------
   var publicDir = path.join(__dirname, "/../public");

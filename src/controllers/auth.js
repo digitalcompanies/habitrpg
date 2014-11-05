@@ -278,11 +278,7 @@ api.setupPassport = function(router) {
   //   redirect the user back to this application at /auth/facebook/callback
   router.get('/auth/facebook',
     passport.authenticate('facebook', {scope: 'email'}),
-    i18n.getUserLanguage,
-    function(req, res){
-      // The request will be redirected to Facebook for authentication, so this
-      // function will not be called.
-    });
+    i18n.getUserLanguage);
 
   // GET /auth/facebook/callback
   //   Use passport.authenticate() as route middleware to authenticate the
@@ -293,44 +289,38 @@ api.setupPassport = function(router) {
     passport.authenticate('facebook', { failureRedirect: '/login' }),
     i18n.getUserLanguage,
     function(req, res) {
-      //res.redirect('/');
-
-      async.waterfall([
-        function(cb){
-          User.findOne({'auth.facebook.id':req.user.id}, cb)
-        },
-        function(user, cb){
-          if (user) return cb(null, user);
-
-          user = new User({
-            preferences: {
-              language: req.language // User language detected from browser, not saved
-            },
-            auth: {
-              facebook: req.user,
-              timestamps: {created: +new Date(), loggedIn: +new Date()}
-            }
-          });
-          user.save(cb);
-          if(isProd && req.user.emails && req.user.emails[0] && req.user.emails[0].value){
-            emailUser((req.user.displayName || req.user.username), req.user.emails[0].value, 'welcome');
-          }
-          ga.event('register', 'Facebook').send()
-        }
-      ], function(err, saved){
-        if (err) return res.redirect('/static/front?err=' + err);
-        req.session.userId = saved._id;
-        res.redirect('/static/front?_id='+saved._id+'&apiToken='+saved.apiToken);
-      })
+      return res.redirect('/static/front?_id='+req.user._id+'&apiToken='+req.user.apiToken);
     });
+};
 
-  // Simple route middleware to ensure user is authenticated.
-  //   Use this route middleware on any resource that needs to be protected.  If
-  //   the request is authenticated (typically via a persistent login session),
-  //   the request will proceed.  Otherwise, the user will be redirected to the
-  //   login page.
-//  function ensureAuthenticated(req, res, next) {
-//    if (req.isAuthenticated()) { return next(); }
-//    res.redirect('/login')
-//  }
+api.facebookStrategy = function(req, accessToken, refreshToken, profile, done) {
+  async.waterfall([
+    function(cb){
+      User.findOne({'auth.facebook.id':profile.id}, cb)
+    },
+    function(user, cb){
+      console.log(req.language);
+      if (user) return cb(null, user);
+
+
+      user = new User({
+        preferences: {
+          language: req.language // User language detected from browser, not saved
+        },
+        auth: {
+          facebook: profile,
+          timestamps: {created: +new Date(), loggedIn: +new Date()}
+        }
+      });
+      user.save(cb);
+      if(isProd && profile.emails && profile.emails[0] && profile.emails[0].value){
+        emailUser((profile.displayName || profile.username), profile.emails[0].value, 'welcome');
+      }
+      ga.event('register', 'Facebook').send()
+    }
+  ], function(err, saved){
+    if (err) return done(err);
+    req.session.userId = saved._id;
+    return done(null, saved);
+  })
 };
