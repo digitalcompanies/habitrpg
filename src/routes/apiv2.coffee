@@ -15,6 +15,7 @@ auth = require("../controllers/auth")
 hall = require("../controllers/hall")
 challenges = require("../controllers/challenges")
 dataexport = require("../controllers/dataexport")
+ifttt = require("../controllers/integrations/ifttt")
 nconf = require("nconf")
 middleware = require("../middleware")
 cron = user.cron
@@ -404,6 +405,29 @@ module.exports = (swagger, v2) ->
           path 'id','Id of webhook to delete','string'
         ]
       action: user.deleteWebhook
+
+    # ---------------------------------
+    # IFTTT
+    # IMPORTANT: Include `middleware: [ifttt.testIftttKey]` in all IFTTT
+    #            operations (IFTTT sends our "Channel Key" in every request.
+    # XXX Either hide all IFTTT operations from the Swagger interface, or document them there with something like this: "All IFTTT operations are expected to fail when used through the HabitRPG API Swagger interface due to the absence of Channel Key authentication from IFTTT."
+    # ---------------------------------
+
+    "/ifttt/v1/status":
+      spec:
+        description: "Returns the status of the server (up or down)."
+      middleware: [ifttt.testIftttKey]
+      action: (req, res) ->
+        res.json ''
+
+    "/ifttt/v1/test/setup:POST":
+      spec:
+        path: '/ifttt/v1/test/setup'
+        method: 'POST'
+        description: "Returns the scaffold JSON response for our IFTTT Channel."
+      middleware: [ifttt.testIftttKey]
+      action: (req, res) ->
+        res.json data: samples: { }
 
     # ---------------------------------
     # Groups
