@@ -136,6 +136,7 @@ habitrpg.controller("GroupsCtrl", ['$scope', '$rootScope', 'Shared', 'Groups', '
         $http.post('/api/v2/members/'+uuid+'/gift', gift).success(function(){
           Notification.text('Gift sent!')
           $rootScope.User.sync();
+          $scope.$close();
         })
       }
     }
