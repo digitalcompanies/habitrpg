@@ -65,7 +65,7 @@ exports.createSubscription = function(data, cb) {
   }
   revealMysteryItems(recipient);
   if(isProduction) {
-    data.gift && utils.txnEmail(data.user, 'subscription-begins');
+    if (!data.gift) utils.txnEmail(data.user, 'subscription-begins');
     utils.ga.event('subscribe', data.paymentMethod).send();
     utils.ga.transaction(data.user._id, block.price).item(block.price, 1, data.paymentMethod.toLowerCase() + '-subscription', data.paymentMethod).send();
   }
@@ -102,7 +102,7 @@ exports.buyGems = function(data, cb) {
   (data.gift ? data.gift.member : data.user).balance += amt;
   data.user.purchased.txnCount++;
   if(isProduction) {
-    utils.txnEmail(data.user, 'donation');
+    if (!data.gift) utils.txnEmail(data.user, 'donation');
     utils.ga.event('checkout', data.paymentMethod).send();
     //TODO ga.transaction to reflect whether this is gift or self-purchase
     utils.ga.transaction(data.user._id, amt).item(amt, 1, data.paymentMethod.toLowerCase() + "-checkout", "Gems > " + data.paymentMethod).send();
