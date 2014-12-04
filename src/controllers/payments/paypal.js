@@ -24,7 +24,8 @@ paypal.configure({
 });
 
 var parseErr = function(res, err){
-  var error = err.response ? err.response.message || err.response.details[0].issue : err;
+  //var error = err.response ? err.response.message || err.response.details[0].issue : err;
+  var error = JSON.stringify(err);
   return res.json(400,{err:error});
 }
 
