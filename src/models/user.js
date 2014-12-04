@@ -106,7 +106,8 @@ var UserSchema = new Schema({
         gemCapExtra: {type:Number, 'default':0},
         trinkets: {type:Number, 'default':0}
       }
-    }
+    },
+    history: {type:Array, 'default': []}
   },
 
   flags: {

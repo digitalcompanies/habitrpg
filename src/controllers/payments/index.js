@@ -25,6 +25,14 @@ function revealMysteryItems(user) {
   });
 }
 
+var pushHistory = function(data){
+  var entry = _.omit(data, 'user');
+  entry.gift = _.omit(data.gift, 'member');
+  data.user.purchased.history.push(entry);
+  data.user.markModified('purchased.history');
+  data.user.purchased.txnCount++;
+}
+
 exports.createSubscription = function(data, cb) {
   var recipient = data.gift ? data.gift.member : data.user;
   //if (!recipient.purchased.plan) recipient.purchased.plan = {}; // FIXME double-check, this should never be the case
@@ -54,6 +62,7 @@ exports.createSubscription = function(data, cb) {
       mysteryItems: []
     });
   }
+  pushHistory(data);
 
   // Block sub perks
   var perks = Math.floor(months/3);
@@ -69,7 +78,6 @@ exports.createSubscription = function(data, cb) {
     utils.ga.event('subscribe', data.paymentMethod).send();
     utils.ga.transaction(data.user._id, block.price).item(block.price, 1, data.paymentMethod.toLowerCase() + '-subscription', data.paymentMethod).send();
   }
-  data.user.purchased.txnCount++;
   if (data.gift) members.sendMessage(data.user, data.gift.member, data.gift);
   async.parallel([
     function(cb2){data.user.save(cb2)},
@@ -100,7 +108,7 @@ exports.cancelSubscription = function(data, cb) {
 exports.buyGems = function(data, cb) {
   var amt = data.gift ? data.gift.gems.amount/4 : 5;
   (data.gift ? data.gift.member : data.user).balance += amt;
-  data.user.purchased.txnCount++;
+  pushHistory(data)
   if(isProduction) {
     if (!data.gift) utils.txnEmail(data.user, 'donation');
     utils.ga.event('checkout', data.paymentMethod).send();
