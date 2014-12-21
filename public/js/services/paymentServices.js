@@ -19,7 +19,7 @@ function($rootScope, User, $http, Content) {
   Payments.showStripe = function(data) {
     var sub =
       data.subscription ? data.subscription
-        : data.gift && data.gift.type=='subscription' ? data.gift.subscription.months
+        : data.gift && data.gift.type=='subscription' ? data.gift.subscription.key
         : false;
     sub = sub && Content.subscriptionBlocks[sub];
     var amount = // 500 = $5
@@ -36,7 +36,8 @@ function($rootScope, User, $http, Content) {
       token: function(res) {
         var url = '/stripe/checkout?a=a'; // just so I can concat &x=x below
         if (data.gift) url += '&gift=' + Payments.encodeGift(data.uuid, data.gift);
-        if (data.subscription) url += '&sub='+sub.months;
+        if (data.subscription) url += '&sub='+sub.key;
+        if (data.coupon) url += '&coupon='+data.coupon;
         $http.post(url, res).success(function() {
           window.location.reload(true);
         }).error(function(res) {
