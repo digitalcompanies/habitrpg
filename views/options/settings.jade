@@ -222,6 +222,11 @@ script(type='text/ng-template', id='partials/options.settings.api.html')
                   .col-sm-2
                     button.btn.btn-sm.btn-primary(type='submit') Add
 
+        h2 Trello
+        button.btn.btn-primary(ng-click='Trello.login()', ng-if='!Trello.member.id') Sign in with Trello
+        button.btn.btn-warning(ng-click='Trello.logout()', ng-if='Trello.member.id') Sign out of Trello
+        small.muted(ng-if='Trello.member.id') Signed in as {{Trello.member.fullName}}
+
 script(id='partials/options.settings.export.html', type="text/ng-template")
   .container-fluid
     .row
