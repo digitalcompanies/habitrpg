@@ -42,7 +42,8 @@
     "hello": "~1.3.1",
     "css-social-buttons": "https://github.com/samcollins/css-social-buttons.git",
     "angular-filter": "~0.5.1",
-    "angular-ui-router": "~0.2.13"
+    "angular-ui-router": "~0.2.13",
+    "intro.js": "~1.0.0"
   },
   "devDependencies": {
     "angular-mocks": "1.3.9"

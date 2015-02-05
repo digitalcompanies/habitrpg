@@ -17,85 +17,64 @@ function($rootScope, User, $timeout, $state) {
     if (User.user.flags.showTour === false) return;
     var tourSteps = [
       {
-        orphan:true,
-        title: window.env.t('welcomeHabit'),
-        content: window.env.t('welcomeHabitT1') + " <a href='http://www.kickstarter.com/profile/1823740484' target='_blank'>Justin</a>, " + window.env.t('welcomeHabitT2'),
+        intro: window.env.t('welcomeHabitT1') + " <a href='http://www.kickstarter.com/profile/1823740484' target='_blank'>Justin</a>, " + window.env.t('welcomeHabitT2'),
       }, {
         element: ".main-herobox",
-        title: window.env.t('yourAvatar'),
-        content: window.env.t('yourAvatarText'),
+        intro: window.env.t('yourAvatarText'),
+        position: 'right'
       }, {
         element: ".main-herobox",
-        title: window.env.t('avatarCustom'),
-        content: window.env.t('avatarCustomText'),
+        intro: window.env.t('avatarCustomText'),
+        position: 'right'
       }, {
         element: ".hero-stats",
-        title: window.env.t('hitPoints'),
-        content: window.env.t('hitPointsText'),
+        intro: window.env.t('hitPointsText'),
+        position: 'right'
       }, {
         element: ".hero-stats",
-        title: window.env.t('expPoints'),
-        content: window.env.t('expPointsText'),
+        intro: window.env.t('expPointsText'),
       }, {
         element: "ul.habits",
-        title: window.env.t('typeGoals'),
-        content: window.env.t('typeGoalsText'),
-        placement: "top"
+        intro: window.env.t('typeGoalsText'),
+        position: "top"
       }, {
         element: "ul.habits",
-        title: window.env.t('habits'),
-        content: window.env.t('tourHabits'),
-        placement: "top"
+        intro: window.env.t('tourHabits'),
+        position: "top"
       }, {
         element: "ul.dailys",
-        title: window.env.t('dailies'),
-        content: window.env.t('tourDailies'),
-        placement: "top"
+        intro: window.env.t('tourDailies'),
+        position: "top"
       }, {
-        element: "ul.todos",
-        title: window.env.t('todos'),
-        content: window.env.t('tourTodos'),
-        placement: "top",
+        element: ".todo-wrapper",
+        intro: window.env.t('tourTodos'),
+        position: "top",
       }, {
         element: "ul.main-list.rewards",
-        title: window.env.t('rewards'),
-        content: window.env.t('tourRewards'),
-        placement: "top"
+        intro: window.env.t('tourRewards'),
+        position: "top"
       }, {
         element: "ul.habits li:first-child",
-        title: window.env.t('hoverOver'),
-        content: window.env.t('hoverOverText'),
-        placement: "right"
+        intro: window.env.t('hoverOverText'),
+        position: "right"
       }, {
-        orphan:true,
-        title: window.env.t('unlockFeatures'),
-        content: window.env.t('unlockFeaturesT1') + " <a href='http://habitrpg.wikia.com' target='_blank'>" + window.env.t('habitWiki') + "</a> " + window.env.t('unlockFeaturesT2'),
-        placement: "right"
+        intro: window.env.t('unlockFeaturesT1') + " <a href='http://habitrpg.wikia.com' target='_blank'>" + window.env.t('habitWiki') + "</a> " + window.env.t('unlockFeaturesT2'),
+        position: "right"
       }
     ];
-    $('.main-herobox').popover('destroy');
-    var tour = new Tour({
-      backdrop: true,
-      //orphan: true,
-      //keyboard: false,
-      template: '<div class="popover" role="tooltip"> <div class="arrow"></div> <h3 class="popover-title"></h3> <div class="popover-content"></div> <div class="popover-navigation"> <div class="btn-group"> <button class="btn btn-sm btn-default" data-role="prev">&laquo; Prev</button> <button class="btn btn-sm btn-default" data-role="next">Next &raquo;</button> <button class="btn btn-sm btn-default" data-role="pause-resume" data-pause-text="Pause" data-resume-text="Resume">Pause</button> </div> <button class="btn btn-sm btn-default" data-role="end">' + window.env.t('endTour') + '</button> </div> </div>',
-      onEnd: function(){
-        User.set({'flags.showTour': false});
-      }
-    });
     _.each(tourSteps, function(step) {
-      step.content = "<div><div class='" + (env.worldDmg.guide ? "npc_justin_broken" : "npc_justin") + " float-left'></div>" + step.content + "</div>";
-      step.onShow = function(){
-        // Since all the steps are currently on the tasks page, ensure we go back there for each step in case they
-        // clicked elsewhere during the tour. FIXME: $state.go() returns a promise, necessary for async tour steps;
-        // however, that's not working here - have to use timeout instead :/
-        if (!$state.is('tasks')) return $timeout(function(){$state.go('tasks');}, 0)
-      }
-      step.html = true;
-      tour.addStep(step);
+      step.intro = "<div><div class='" + (env.worldDmg.guide ? "npc_justin_broken" : "npc_justin") + " float-left'></div>" + step.intro + "</div>";
     });
-    tour.restart(); // Tour doesn't quite mesh with our handling of flags.showTour, just restart it on page load
-    //tour.start(true);
+    var intro = introJs();
+    intro.setOptions({
+      scrollToElement:true,
+      steps:tourSteps,
+      showStepNumbers: false,
+      doneLabel: window.env.t('endTour')
+    }).oncomplete(function(){
+      User.set({'flags.showTour': false});
+    })
+    intro.start(); // Tour doesn't quite mesh with our handling of flags.showTour, just restart it on page load
   };
 
   var alreadyShown = function(before, after) {

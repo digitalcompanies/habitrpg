@@ -5,7 +5,7 @@
             "bower_components/jquery.cookie/jquery.cookie.js",
             "bower_components/pnotify/jquery.pnotify.min.js",
             "bower_components/bootstrap-growl/jquery.bootstrap-growl.js",
-            "bower_components/bootstrap-tour/build/js/bootstrap-tour.js",
+            "bower_components/intro.js/intro.js",
             "bower_components/angular/angular.js",
             "bower_components/angular-sanitize/angular-sanitize.js",
             "bower_components/marked/lib/marked.js",
@@ -73,7 +73,7 @@
             "bower_components/pnotify/jquery.pnotify.default.css",
             "bower_components/pnotify/jquery.pnotify.default.icons.css",
             "bower_components/habitrpg-shared/dist/habitrpg-shared.css",
-            "bower_components/bootstrap-tour/build/css/bootstrap-tour.css",
+            "bower_components/intro.js/introjs.css",
             "fontello/css/fontelico.css"
         ]
     },
