@@ -139,7 +139,7 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
                 i.fa.fa-chevron-left
               a.right.carousel-control(data-slide='next', href='#quote-carousel')
                 i.fa.fa-chevron-right
-      button.btn.btn-primary.btn-lg.gamifybutton.fixedcta Gamify your life today!
+      button.btn.btn-primary.btn-lg.gamifybutton.fixedcta(ng-click='playButtonClick()') Gamify your life today!
     section#uses
       h2 Players use HabitRPG to manage...
       .container-fluid
@@ -408,7 +408,7 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
                         | I&apos;ve had horrible habits with clearing my place completely after meals and leaving cups all over the place. HabitRPG has cured that!
             // End Item
         // End Carousel
-      button.btn.btn-primary.btn-lg.gamifybutton.fixedcta Gamify your life today!
+      button.btn.btn-primary.btn-lg.gamifybutton.fixedcta(ng-click='playButtonClick()') Gamify your life today!
     section#rewards.bg-warning.container-fluid
       .row
         .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
@@ -439,7 +439,7 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
             h2
               span.glyphicon.glyphicon-arrow-down
             img(src='/front/images/TVreward.png')
-        button.btn.btn-primary.btn-lg.fixedcta.gamifybutton Gamify your life today!
+        button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()') Gamify your life today!
     section#levels.container-fluid
       .row
         .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
@@ -466,7 +466,7 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
             img(src='/front/images/Rogue.png')
             img(src='/front/images/Wizard.png')
             img(src='/front/images/Warrior.png')
-        button.btn.btn-primary.btn-lg.fixedcta.gamifybutton Gamify your life today!
+        button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()') Gamify your life today!
     section#health.bg-danger.container-fluid
       .row
         .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
@@ -498,7 +498,7 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
             .meter.health
               .bar
                 div(style='width:50%;') &nbsp;
-        button.btn.btn-primary.btn-lg.fixedcta.gamifybutton Gamify your life today!
+        button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()') Gamify your life today!
     section#quest.container-fluid
       .row
         .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
@@ -517,7 +517,7 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
               .popover-content
                 | My party and our quests keep me engaged in the game, which keeps me motivated to get things done and change my life in positive ways
         .col-lg-4.col-md-6.col-md-offset-1.col-lg-offset-1.col-sm-10.well.col-xs-10.col-xs-offset-1.col-sm-offset-1.well-lg
-          img.clearfix.center-block(style='padding-bottom:30px;', src="images/Quest_dilatory_drag'onSmall.png")
+          img.clearfix.center-block(style='padding-bottom:30px;', src="/front/images/Quest_dilatory_dragonSmall.png")
           .row
             .col-lg-5.col-md-5.col-sm-5.col-sm-offset-0.col-xs-5.col-xs-offset-0
               .health-progress
@@ -540,7 +540,7 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
                     div(style='width:0%;') &nbsp;
               .quest-friend-img
                 img(src='/front/images/party/GrimReaper.png')
-        button.btn.btn-primary.btn-lg.fixedcta.gamifybutton Gamify your life today!
+        button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()') Gamify your life today!
     section#features.bg-info.container-fluid
       .row
         h2 We also feature...
@@ -574,7 +574,7 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
             h4 Social play
             p
               | Join common-interest groups with like-minded people. Create Challenges to compete against other users.
-        button.btn.btn-primary.btn-lg.fixedcta.gamifybutton Gamify your life today!
+        button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()') Gamify your life today!
     #footercall
       .container-fluid
         .row
@@ -661,27 +661,34 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
     // Use carousel initialize
     script(type='text/javascript').
       $(document).ready( function() {
-      var clickEvent = false;
-      $('#myCarousel').on('click', '.nav a', function() {
-      clickEvent = true;
-      $('.nav li').removeClass('active');
-      $(this).parent().addClass('active');
-      }).on('slid.bs.carousel', function(e) {
-      if(!clickEvent) {
-      var count = $('.nav').children().length -1;
-      var current = $('.nav li.active');
-      current.removeClass('active').next().addClass('active');
-      var id = parseInt(current.data('slide-to'));
-      if(count == id) {
-      $('.nav li').first().addClass('active');
-      }
-      }
-      clickEvent = false;
-      });
+        var clickEvent = false;
+        $('#myCarousel').on('click', '.nav a', function() {
+          clickEvent = true;
+          $('.nav li').removeClass('active');
+          $(this).parent().addClass('active');
+        }).on('slid.bs.carousel', function(e) {
+          if(!clickEvent) {
+            var count = $('.nav').children().length -1;
+            var current = $('.nav li.active');
+            current.removeClass('active').next().addClass('active');
+            var id = parseInt(current.data('slide-to'));
+            if(count == id) {
+              $('.nav li').first().addClass('active');
+            }
+          }
+          clickEvent = false;
+        });
       });
     // Tooltips
     script(type='text/javascript').
       $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-      $('[data-toggle="popover"]').popover()
+        $('[data-toggle="tooltip"]').tooltip()
+        $('[data-toggle="popover"]').popover()
       })
+    // Hack fix for carousel (http://stackoverflow.com/a/22182184/362790)
+    script.
+      angular.module('ui.bootstrap.carousel', ['ui.bootstrap.transition'])
+      .controller('CarouselController', ['$scope', '$timeout', '$transition', '$q', function ($scope, $timeout, $transition, $q) {
+      }]).directive('carousel', [function () {
+        return {}
+      }]);
