@@ -208,20 +208,21 @@ li(bindonce='list', id='task-{{::task.id}}', ng-repeat='task in obj[list.type+"s
           fieldset.option-group.advanced-option(ng-class="{visuallyhidden: task._advanced}")
             legend.option-title
               a.hint.difficulty-multiplier-help(href='https://trello.com/card/priority-multiplier/50e5d3684fe3a7266b0036d6/17', target='_blank', popover-title=env.t('difficultyHelpTitle'), popover-trigger='mouseenter', popover=env.t('difficultyHelpContent'))=env.t('difficulty')
-              //change to difficulty and also parameter of class to difficulty
-            .task-controls.tile-group.difficulty-multiplier
-              button.task-action-btn.tile(type='button', ng-class='{active: task.difficulty==0.5}', ng-click='task.challenge.id || ((task.difficulty=0.5) && (task.weight = task.priority * task.difficulty))')=env.t('easy')
-              button.task-action-btn.tile(type='button', ng-class='{active: task.difficulty==1 || !task.difficulty}', ng-click='task.challenge.id || ((task.difficulty=1) && (task.weight = task.priority * task.difficulty))')=env.t('medium')
-              button.task-action-btn.tile(type='button', ng-class='{active: task.difficulty==2}', ng-click='task.challenge.id || ((task.difficulty=2) && (task.weight = task.priority * task.difficulty))')=env.t('hard')
+            ul.priority-multiplier
+              li
+                button(type='button', ng-class='{active: task.difficulty==0.5}', ng-click='task.challenge.id || ((task.difficulty=0.5) && (task.weight = task.priority * task.difficulty))')=env.t('easy')
+                button(type='button', ng-class='{active: task.difficulty==1 || !task.difficulty}', ng-click='task.challenge.id || ((task.difficulty=1) && (task.weight = task.priority * task.difficulty))')=env.t('medium')
+                button(type='button', ng-class='{active: task.difficulty==2}', ng-click='task.challenge.id || ((task.difficulty=2) && (task.weight = task.priority * task.difficulty))')=env.t('hard')
 
             //template from task priority muliplier
             legend.option-title
               a.hint.priority-multiplier-help(href='https://trello.com/card/priority-multiplier/50e5d3684fe3a7266b0036d6/17', target='_blank', popover-title=env.t('priorityHelpTitle'), popover-trigger='mouseenter', popover=env.t('priorityHelpContent'))=env.t('priority')
-            .task-controls.tile-group.priority-multiplier
-              button.task-action-btn.tile(type='button', ng-class='{active: task.priority==0.1}', ng-click='task.challenge.id || ((task.priority=0.1) && (task.weight = task.priority * task.difficulty))')=env.t('trivial')
-              button.task-action-btn.tile(type='button', ng-class='{active: task.priority==1 || !task.priority}', ng-click='task.challenge.id || ((task.priority=1) && (task.weight = task.priority * task.difficulty))')=env.t('low')
-              button.task-action-btn.tile(type='button', ng-class='{active: task.priority==1.5}', ng-click='task.challenge.id || ((task.priority=1.5) && (task.weight = task.priority * task.difficulty))')=env.t('normal')
-              button.task-action-btn.tile(type='button', ng-class='{active: task.priority==2}', ng-click='task.challenge.id || ((task.priority=2) && (task.weight = task.priority * task.difficulty))')=env.t('high')
+            ul.priority-multiplier
+              li
+                button(type='button', ng-class='{active: task.priority==0.1}', ng-click='task.challenge.id || ((task.priority=0.1) && (task.weight = task.priority * task.difficulty))')=env.t('trivial')
+                button(type='button', ng-class='{active: task.priority==1 || !task.priority}', ng-click='task.challenge.id || ((task.priority=1) && (task.weight = task.priority * task.difficulty))')=env.t('low')
+                button(type='button', ng-class='{active: task.priority==1.5}', ng-click='task.challenge.id || ((task.priority=1.5) && (task.weight = task.priority * task.difficulty))')=env.t('normal')
+                button(type='button', ng-class='{active: task.priority==2}', ng-click='task.challenge.id || ((task.priority=2) && (task.weight = task.priority * task.difficulty))')=env.t('high')
 
             //span(ng-if='task.type=="daily" && !task.challenge.id')
             span(ng-if='task.type=="daily"')
