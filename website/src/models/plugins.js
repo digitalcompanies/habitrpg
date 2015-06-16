@@ -1,10 +1,17 @@
 var _ = require('lodash');
 var async = require('async');
+var mongoose = require('mongoose');
+var Task = require('./task').model;
 
 function taskHelpers (schema, modelName) {
 
   modelName!=='User' && schema.virtual('tasks').get(function(){
     return _.defaults({},this.habits,this.dailys,this.todos,this.rewards);
+  })
+
+  schema.methods.toJSON = _.flow(schema.methods.toJSON, function(doc){
+    _.merge(doc, _.pick(this, 'habits dailys todos rewards'.split(' ')));
+    return doc;
   })
 
   schema.statics.withTasks = function (q, cb) {
@@ -24,7 +31,7 @@ function taskHelpers (schema, modelName) {
     var self = this;
     async.waterfall([
       function(cb2){
-        mongoose.model("Task").find({_owner: self._id}, cb2);
+        Task.find({_owner: self._id}, cb2);
       },
       function(tasks, cb2){
         _.each(['habit', 'daily', 'todo', 'reward'], function(type){
@@ -32,7 +39,6 @@ function taskHelpers (schema, modelName) {
             if (v.type==type) m[v._id]=v; return m;
           }, {});
         });
-        console.log(self);
         cb2(null, self);
       }
     ], cb);
@@ -55,6 +61,11 @@ function taskHelpers (schema, modelName) {
       }
     })
   }
+
+  schema.pre('save', function(next){
+    this.validateTasks(); // todo: ensure this is called _after_ user.pre('save')
+    next();
+  })
 }
 
 module.exports = exports = {

@@ -53,18 +53,14 @@ global.registerNewUser = (cb, main) ->
       email: randomID + "@gmail.com"
     .end (res) ->
       return cb(null, res.body)  unless main
-      _id = res.body._id
-      apiToken = res.body.apiToken
-      User.findOne
-        _id: _id
-        apiToken: apiToken
-      , (err, _user) ->
-        expect(err).to.not.be.ok
-        global.user = _user
-        request
-          .set("Accept", "application/json")
-          .set("X-API-User", _id)
-          .set("X-API-Key", apiToken)
+      {_id,apiToken} = res.body
+      request
+        .set("Accept", "application/json")
+        .set("X-API-User", _id)
+        .set("X-API-Key", apiToken)
+      request.get("#{baseURL}/user").end (res) ->
+        expectCodee(res,200)
+        global.user = res.body
         cb null, res.body
 
 global.registerManyUsers = (number, callback) ->

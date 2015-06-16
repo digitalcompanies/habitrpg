@@ -77,10 +77,10 @@ habitrpg.controller("ChallengesCtrl", ['$rootScope','$scope', 'Shared', 'User', 
       $scope.obj = $scope.newChallenge = new Challenges.Challenge({
         name: '',
         description: '',
-        habits: [],
-        dailys: [],
-        todos: [],
-        rewards: [],
+        habits: {},
+        dailys: {},
+        todos: {},
+        rewards: {},
         leader: User.user._id,
         group: defaultGroup,
         timestamp: +(new Date),
@@ -192,9 +192,7 @@ habitrpg.controller("ChallengesCtrl", ['$rootScope','$scope', 'Shared', 'User', 
 
     $scope.addTask = function(addTo, listDef) {
       var task = Shared.taskDefaults({text: listDef.newTask, type: listDef.type});
-      addTo.unshift(task);
-      //User.log({op: "addTask", data: task}); //TODO persist
-      delete listDef.newTask;
+      Shared.refPush(addTo, task);
     };
 
     $scope.removeTask = function(task, list) {
