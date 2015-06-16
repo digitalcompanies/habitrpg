@@ -59,30 +59,16 @@ var TaskSchema = new Schema({
   // To-Dos
   due: {}, //@migration from date(string) to Date // FIXME we're getting parse errors, people have stored as "today" and "3/13". Need to run a migration & put this back to type: Date
 
+  completed: {type: Boolean, 'default': false}, //dailies+todos
+  collapseChecklist: {type:Boolean, 'default':false}, // dailies+todos
+  streak: {type: Number, 'default': 0},
+  dateCompleted: Date,
+  archived: {type:Boolean, 'default':false},
+  approval: Number,
+
 }, {
   toObject: { virtuals: true },
   toJSON: { virtuals: true }
-});
-
-TaskSchema.plugin(dictionaryPlugin, {
-  fields: {
-    members: {
-      text: String,
-      notes: String,
-      tags: {type: Schema.Types.Mixed, 'default': {}}, //{ "4ddf03d9-54bd-41a3-b011-ca1f1d2e9371" : true },
-      value: {type: Number, 'default': 0}, // redness
-      sort: Number,
-      history: Array,
-      completed: {type: Boolean, 'default': false}, //dailies+todos
-      collapseChecklist: {type:Boolean, 'default':false}, // dailies+todos
-      streak: {type: Number, 'default': 0},
-      dateCompleted: Date,
-      archived: {type:Boolean, 'default':false},
-      approval: Number,
-
-      checklist: {type: Schema.Types.Mixed }
-    }
-  }
 });
 
 TaskSchema.virtual('id').get(function(){

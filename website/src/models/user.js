@@ -12,6 +12,7 @@ var Task = require('./task').model;
 var Challenge = require('./challenge').model;
 var moment = require('moment');
 var async = require('async');
+var plugins = require('./plugins');
 
 
 // User Schema
@@ -440,22 +441,6 @@ UserSchema.post('init', function(doc){
   shared.wrap(doc); //fixme remove
 });
 
-UserSchema.methods.validateTasks = function(){
-  var self = this;
-  _.each( _.defaults({},self.habits,self.todos,self.dailys,self.rewards), function(v,k){
-    if (v.isModified && v.isModified()) {
-      v.save();
-    } else if (!v.isModified || v.isNew) { // is POJO or new model
-      var task = new Task(v);
-      task._owner=self._id;
-      task.emit('new', task);
-      task.members.$add(self._id, v.members || {});
-      console.log(task.members);
-      task.save();
-      self[v.type+'s'][k] = task;
-    }
-  })
-}
 
 UserSchema.pre('save', function(next) {
 
@@ -579,28 +564,7 @@ UserSchema.methods.unlink = function(options, cb) {
   self.save(cb);
 }
 
-UserSchema.statics.withTasks = function (q, cb) {
-  q = _.isString(q) ? {_id:q} : q;
-  async.auto({
-    user: function(cb2){
-      mongoose.model('User').findOne(q, cb2);
-    },
-    tasks: ['user', function (cb2, obj) {
-      if (!obj.user) return cb2({code:404, message: "User not found"});
-      mongoose.model("Task").find({_owner: obj.user._id}, cb2);
-    }]
-  }, function(err, obj){
-    if (err) return cb(err);
-    _.each(['habit', 'daily', 'todo', 'reward'], function(type){
-      obj.user[type+'s'] = _.reduce(obj.tasks, function(m,v){
-        if (v.type==type) m[v._id]=v;
-        return m;
-      }, {})
-    });
-    cb(null, obj.user);
-  })
-};
-
+plugins.taskHelpers(UserSchema, 'User');
 
 module.exports.schema = UserSchema;
 module.exports.model = mongoose.model("User", UserSchema);
