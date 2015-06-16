@@ -8,14 +8,19 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 var shared = require('../../../common');
 var _ = require('lodash');
-var TaskSchemas = require('./task');
+var Task = require('./task').model;
 var Challenge = require('./challenge').model;
 var moment = require('moment');
+var async = require('async');
+
 
 // User Schema
 // -----------
 
 var UserSchema = new Schema({
+
+  //tasks: [{type:String, ref:"Task"}], //todo use backref instead via mongoose-reverse-populate?
+
   // ### UUID and API Token
   _id: {
     type: String,
@@ -400,11 +405,6 @@ var UserSchema = new Schema({
     optOut: {type:Boolean, 'default':false}
   },
 
-  habits:   {type:[TaskSchemas.HabitSchema]},
-  dailys:   {type:[TaskSchemas.DailySchema]},
-  todos:    {type:[TaskSchemas.TodoSchema]},
-  rewards:  {type:[TaskSchemas.RewardSchema]},
-
   extra: Schema.Types.Mixed,
 
   pushDevices: {type: [{
@@ -414,7 +414,7 @@ var UserSchema = new Schema({
 
 }, {
   strict: true,
-  minimize: false // So empty objects are returned
+  minimize: false, // So empty objects are returned
 });
 
 UserSchema.methods.deleteTask = function(tid) {
@@ -428,53 +428,65 @@ UserSchema.methods.toJSON = function() {
   // FIXME? Is this a reference to `doc.filters` or just disabled code? Remove?
   doc.filters = {};
   doc._tmp = this._tmp; // be sure to send down drop notifs
+  var self = this;
+  _.each(['habits', 'dailys', 'todos', 'rewards'], function(t){ // keep our custom task properties
+    doc[t] = self[t];
+  })
 
   return doc;
 };
 
-//UserSchema.virtual('tasks').get(function () {
-//  var tasks = this.habits.concat(this.dailys).concat(this.todos).concat(this.rewards);
-//  var tasks = _.object(_.pluck(tasks,'id'), tasks);
-//  return tasks;
-//});
-
 UserSchema.post('init', function(doc){
-  shared.wrap(doc);
-})
+  shared.wrap(doc); //fixme remove
+});
+
+UserSchema.methods.validateTasks = function(){
+  var self = this;
+  _.each( _.defaults({},self.habits,self.todos,self.dailys,self.rewards), function(v,k){
+    if (v.isModified && v.isModified()) {
+      v.save();
+    } else if (!v.isModified || v.isNew) { // is POJO or new model
+      var task = new Task(v);
+      task._owner=self._id;
+      task.emit('new', task);
+      task.members.$add(self._id, v.members || {});
+      console.log(task.members);
+      task.save();
+      self[v.type+'s'][k] = task;
+    }
+  })
+}
 
 UserSchema.pre('save', function(next) {
 
+  var self = this;
+
   // Populate new users with default content
   if (this.isNew){
-    //TODO for some reason this doesn't work here: `_.merge(this, shared.content.userDefaults);`
     var self = this;
-    _.each(['habits', 'dailys', 'todos', 'rewards', 'tags'], function(taskType){
-      self[taskType] = _.map(shared.content.userDefaults[taskType], function(task){
-        var newTask = _.cloneDeep(task);
-
+    _.each(['habits', 'dailys', 'todos', 'rewards'], function(type){
+      self[type] = {};
+      _.each(shared.content.userDefaults[type], _.flow(_.cloneDeep, function(task){
         // Render task's text and notes in user's language
-        if(taskType === 'tags'){
-          // tasks automatically get id=helpers.uuid() from TaskSchema id.default, but tags are Schema.Types.Mixed - so we need to manually invoke here
-          newTask.id = shared.uuid();
-          newTask.name = newTask.name(self.preferences.language);
-        }else{
-          newTask.text = newTask.text(self.preferences.language);
-          if(newTask.notes) {
-            newTask.notes = newTask.notes(self.preferences.language);
-          }
-
-          if(newTask.checklist){
-            newTask.checklist = _.map(newTask.checklist, function(checklistItem){
-              checklistItem.text = checklistItem.text(self.preferences.language);
-              return checklistItem;
-            });
-          }
-        }
-
-        return newTask;
-      });
+        task.text = task.text(self.preferences.language);
+        if (task.notes)
+          task.notes = task.notes(self.preferences.language);
+        _.each(task.checklist, function(checklistItem){
+          checklistItem.text = checklistItem.text(self.preferences.language);
+        })
+        task._id = shared.uuid();
+        self[type][task._id] = task;
+      }));
     });
+    self.tags = _.map(shared.content.userDefaults.tags, _.flow(_.cloneDeep, function(tag){
+      // tasks automatically get id=helpers.uuid() from TaskSchema id.default, but tags are Schema.Types.Mixed - so we need to manually invoke here
+      tag.id = shared.uuid();
+      tag.name = tag.name(self.preferences.language);
+      return tag;
+    }));
   }
+
+  self.validateTasks();
 
   //this.markModified('tasks');
   if (_.isNaN(this.preferences.dayStart) || this.preferences.dayStart < 0 || this.preferences.dayStart > 23) {
@@ -534,6 +546,8 @@ UserSchema.pre('save', function(next) {
   if (_.isNaN(this._v) || !_.isNumber(this._v)) this._v = 0;
   this._v++;
 
+  delete this.tasks;
+
   next();
 });
 
@@ -562,12 +576,31 @@ UserSchema.methods.unlink = function(options, cb) {
       })
       break;
   }
-  self.markModified('habits');
-  self.markModified('dailys');
-  self.markModified('todos');
-  self.markModified('rewards');
   self.save(cb);
 }
+
+UserSchema.statics.withTasks = function (q, cb) {
+  q = _.isString(q) ? {_id:q} : q;
+  async.auto({
+    user: function(cb2){
+      mongoose.model('User').findOne(q, cb2);
+    },
+    tasks: ['user', function (cb2, obj) {
+      if (!obj.user) return cb2({code:404, message: "User not found"});
+      mongoose.model("Task").find({_owner: obj.user._id}, cb2);
+    }]
+  }, function(err, obj){
+    if (err) return cb(err);
+    _.each(['habit', 'daily', 'todo', 'reward'], function(type){
+      obj.user[type+'s'] = _.reduce(obj.tasks, function(m,v){
+        if (v.type==type) m[v._id]=v;
+        return m;
+      }, {})
+    });
+    cb(null, obj.user);
+  })
+};
+
 
 module.exports.schema = UserSchema;
 module.exports.model = mongoose.model("User", UserSchema);

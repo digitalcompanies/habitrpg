@@ -9,25 +9,19 @@ api.i18n = i18n
 # little helper for large arrays of strings. %w"this that another" equivalent from Ruby, I really miss that function
 $w = api.$w = (s)->s.split(' ')
 
-api.dotSet = (obj,path,val)->
-  arr = path.split('.')
-  _.reduce arr, (curr, next, index) =>
-    if (arr.length - 1) == index
-      curr[next] = val
-    (curr[next] ?= {})
-  , obj
-api.dotGet = (obj,path)->
-  _.reduce path.split('.'), ((curr, next) => curr?[next]), obj
+api.dotSet = _.set
+api.dotGet = _.get
 
 ###
   Reflists are arrays, but stored as objects. Mongoose has a helluvatime working with arrays (the main problem for our
   syncing issues) - so the goal is to move away from arrays to objects, since mongoose can reference elements by ID
   no problem. To maintain sorting, we use these helper functions:
 ###
-api.refPush = (reflist, item, prune=0) ->
+api.refPush = (reflist, item, opts={}) ->
   item.sort = if _.isEmpty(reflist) then 0 else _.max(reflist,'sort').sort+1
-  item.id = api.uuid() unless item.id and !reflist[item.id]
-  reflist[item.id] = item
+  item._id = api.uuid() unless item._id and !reflist[item._id]
+  if opts.array then reflist.push(item) else reflist[item._id] = item
+  #todo handle opts.prune
 
 api.planGemLimits =
   convRate: 20 #how much does a gem cost?
@@ -591,37 +585,38 @@ api.wrap = (user, main=true) ->
         cb? null, user.todos
 
       sortTask: (req, cb) ->
-        {id} = req.params
-        {to, from} = req.query
-        task = user.tasks[id]
+        [{_id},{to,from}] = [req.params,req.query]
+        task = user.tasks[_id]
         return cb?({code:404, message: i18n.t('messageTaskNotFound', req.language)}) unless task
         return cb?('?to=__&from=__ are required') unless to? and from?
-        tasks = user["#{task.type}s"]
-        movedTask = tasks.splice(from, 1)[0]
+        list = _(user["#{task.type}s"]).toArray().sortBy('sort').value()
+        movedTask = list.splice(from, 1)[0]
+        #arr.splice to, 0, arr.splice(from, 1)[0]
         if to == -1 # we've used the Push To Bottom feature
-          tasks.push(movedTask)
+          list.push(movedTask)
         else  # any other sort method uses only positive 'to' values
-          tasks.splice(to, 0, movedTask)
-        cb? null, tasks
+          list.splice(to, 0, movedTask)
+        _.each list, (t,i)->t.sort=i
+        cb? null, user["#{task.type}s"]
 
       updateTask: (req, cb) ->
-        return cb?({code:404,message:i18n.t('messageTaskNotFound', req.language)}) unless task = user.tasks[req.params?.id]
-        _.merge task, _.omit(req.body,['checklist','id', 'type'])
+        return cb?({code:404,message:i18n.t('messageTaskNotFound', req.language)}) unless task = user.tasks[req.params?._id]
+        _.merge task, _.omit(req.body,['checklist','_id', 'type'])
         task.checklist = req.body.checklist if req.body.checklist
         task.markModified? 'tags'
         cb? null, task
 
       deleteTask: (req, cb) ->
-        task = user.tasks[req.params?.id]
+        task = user.tasks[req.params?._id]
         return cb?({code:404,message:i18n.t('messageTaskNotFound', req.language)}) unless task
-        i = user[task.type + "s"].indexOf(task)
-        user[task.type + "s"].splice(i, 1) if ~i
+        delete user[task.type + "s"][task._id]
+        task.remove?()
         cb? null, {}
 
       addTask: (req, cb) ->
         task = api.taskDefaults(req.body)
         return cb?({code:409,message:i18n.t('messageDuplicateTaskID', req.language)}) if user.tasks[task.id]?
-        user["#{task.type}s"].unshift(task)
+        api.refPush(user["#{task.type}s"],task) #note, the added task is disgarded from user.* on server, but the task is saved
         if user.preferences.newTaskEdit then task._editing = true
         if user.preferences.tagsCollapsed then task._tags = true
         if user.preferences.advancedCollapsed then task._advanced = true
@@ -674,15 +669,15 @@ api.wrap = (user, main=true) ->
       # ------
       addWebhook: (req, cb) ->
         wh = user.preferences.webhooks
-        api.refPush(wh, {url:req.body.url, enabled: req.body.enabled or true, id:req.body.id})
+        api.refPush(wh, {url:req.body.url, enabled: req.body.enabled or true, _id:req.body._id})
         user.markModified? 'preferences.webhooks'
         cb? null, user.preferences.webhooks
       updateWebhook: (req, cb) ->
-        _.merge(user.preferences.webhooks[req.params.id], req.body)
+        _.merge(user.preferences.webhooks[req.params._id], req.body)
         user.markModified? 'preferences.webhooks'
         cb? null, user.preferences.webhooks
       deleteWebhook: (req, cb) ->
-        delete user.preferences.webhooks[req.params.id]
+        delete user.preferences.webhooks[req.params._id]
         user.markModified? 'preferences.webhooks'
         cb? null, user.preferences.webhooks
 
@@ -1074,7 +1069,8 @@ api.wrap = (user, main=true) ->
       # ------
 
       score: (req, cb) ->
-        {id, direction} = req.params # up or down
+        {direction} = req.params # up or down
+        id = req.params._id or req.params.id
         task = user.tasks[id]
         options = req.query or {}; _.defaults(options, {times:1, cron:false})
 
@@ -1598,10 +1594,10 @@ api.wrap = (user, main=true) ->
       dailyChecked = 0        # how many dailies were checked?
       dailyDueUnchecked = 0   # how many dailies were due but not checked?
       user.party.quest.progress.down ?= 0
-      user.todos.concat(user.dailys).forEach (task) ->
+      _.each _.defaults({}, user.todos, user.dailys), (task) ->
         return unless task
 
-        {id, type, completed, repeat} = task
+        {_id, type, completed, repeat} = task
 
         # Deduct points for missed Daily tasks, but not for Todos (just increase todo's value)
         EvadeTask = 0
@@ -1629,7 +1625,7 @@ api.wrap = (user, main=true) ->
                 dailyChecked += fractionChecked
               else
                dailyDueUnchecked += 1
-            delta = user.ops.score({params:{id:task.id, direction:'down'}, query:{times:(scheduleMisses-EvadeTask), cron:true}}); # this line occurs for todos or dailys
+            delta = user.ops.score({params:{_id:task._id, direction:'down'}, query:{times:(scheduleMisses-EvadeTask), cron:true}}); # this line occurs for todos or dailys
             user.party.quest.progress.down += delta if type is 'daily'
 
         switch type
@@ -1640,16 +1636,21 @@ api.wrap = (user, main=true) ->
             if completed || (scheduleMisses > 0)
               _.each task.checklist, ((i)->i.completed=false;true) # this should not happen for grey tasks unless they are completed
           when 'todo'
-          #get updated value
+            # get updated value
             absVal = if (completed) then Math.abs(task.value) else task.value
             todoTally += absVal
+            # archive old ones #FIXME untested code
+            if task.completed && !task.challenge?.id && moment(task.dateCompleted).isBefore(moment().subtract({days:3}))
+              task.archived = true
+        true
 
-      user.habits.forEach (task) -> # slowly reset 'onlies' value to 0
+      _.each user.habits, (task) -> # slowly reset 'onlies' value to 0
         if task.up is false or task.down is false
           if Math.abs(task.value) < 0.1
             task.value = 0
           else
             task.value = task.value / 2
+        true
 
 
       # Finished tallying
@@ -1667,7 +1668,7 @@ api.wrap = (user, main=true) ->
       unless user.purchased?.plan?.customerId
         user.fns.preenUserHistory()
         user.markModified? 'history'
-        user.markModified? 'dailys' # covers dailys.*.history
+#        FIXME user.markModified? 'dailys' # covers dailys.*.history
 
       user.stats.buffs =
         if perfect
@@ -1697,7 +1698,7 @@ api.wrap = (user, main=true) ->
 
     # Registered users with some history
     preenUserHistory: (minHistLen = 7) ->
-      _.each user.habits.concat(user.dailys), (task) ->
+      _.each _.defaults({}, user.habits, user.dailys), (task) ->
         task.history = preenHistory(task.history) if task.history?.length > minHistLen
         true
 
@@ -1734,6 +1735,8 @@ api.wrap = (user, main=true) ->
   # ----------------------------------------------------------------------
   # Virtual Attributes
   # ----------------------------------------------------------------------
+  Object.defineProperty user, 'tasks',
+    get: ->_.defaults {}, user.habits, user.dailys, user.todos, user.rewards
 
   # Aggregate all intrinsic stats, buffs, weapon, & armor into computed stats
   Object.defineProperty user, '_statsComputed',
@@ -1754,7 +1757,3 @@ api.wrap = (user, main=true) ->
       , {}
       computed.maxMP = computed.int*2 + 30
       computed
-  Object.defineProperty user, 'tasks',
-    get: ->
-      tasks = user.habits.concat(user.dailys).concat(user.todos).concat(user.rewards)
-      _.object(_.pluck(tasks, "id"), tasks)

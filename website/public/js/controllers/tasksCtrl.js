@@ -93,16 +93,16 @@ habitrpg.controller("TasksCtrl", ['$scope', '$rootScope', '$location', 'User','N
 
     $scope.removeTask = function(task) {
       if (!confirm(window.env.t('sureDelete'))) return;
-      User.user.ops.deleteTask({params:{id:task.id}})
+      User.user.ops.deleteTask({params:{_id:task._id}})
     };
 
     $scope.saveTask = function(task, stayOpen, isSaveAndClose) {
       if (task.checklist)
         task.checklist = _.filter(task.checklist,function(i){return !!i.text});
-      User.user.ops.updateTask({params:{id:task.id},body:task});
+      User.user.ops.updateTask({params:{_id:task._id},body:task});
       if (!stayOpen) task._editing = false;
       if (isSaveAndClose)
-        $("#task-" + task.id).parent().children('.popover').removeClass('in');
+        $("#task-" + task._id).parent().children('.popover').removeClass('in');
       if (task.type == 'habit') Guide.goto('intro', 3);
     };
 

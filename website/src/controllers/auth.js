@@ -33,7 +33,7 @@ api.auth = function(req, res, next) {
   var uid = req.headers['x-api-user'];
   var token = req.headers['x-api-key'];
   if (!(uid && token)) return res.json(401, NO_TOKEN_OR_UID);
-  User.findOne({_id: uid,apiToken: token}, function(err, user) {
+  User.withTasks({_id: uid,apiToken: token}, function(err, user) {
     if (err) return next(err);
     if (_.isEmpty(user)) return res.json(401, NO_USER_FOUND);
     if (user.auth.blocked) return res.json(401, accountSuspended(user._id));

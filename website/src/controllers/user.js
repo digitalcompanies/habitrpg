@@ -71,7 +71,7 @@ var findTask = function(req, res) {
   Export it also so we can call it from deprecated.coffee
 */
 api.score = function(req, res, next) {
-  var id = req.params.id,
+  var id = req.params._id || req.params.id,
     direction = req.params.direction,
     user = res.locals.user,
     task;
@@ -94,7 +94,7 @@ api.score = function(req, res, next) {
     // If it doesn't exist, this is likely a 3rd party up/down - create a new one, then score it
     // Defaults. Other defaults are handled in user.ops.addTask()
     task = {
-      id: id,
+      _id: id,
       type: req.body && req.body.type,
       text: req.body && req.body.text,
       notes: (req.body && req.body.notes) || "This task was created by a third-party service. Feel free to edit, it won't harm the connection to that service. Additionally, multiple services may piggy-back off this task."
@@ -105,7 +105,7 @@ api.score = function(req, res, next) {
       
     task = user.ops.addTask({body:task});
   }
-  var delta = user.ops.score({params:{id:task.id, direction:direction}, language: req.language});
+  var delta = user.ops.score({params:{_id:task._id, direction:direction}, language: req.language});
 
   user.save(function(err,saved){
     if (err) return next(err);
@@ -600,10 +600,6 @@ api.batchUpdate = function(req, res, next) {
 
     // Fetch full user object
     }else if(response.wasModified){
-      // Preen 3-day past-completed To-Dos from Angular & mobile app
-      response.todos = _.where(response.todos, function(t) {
-        return !t.completed || (t.challenge && t.challenge.id) || moment(t.dateCompleted).isAfter(moment().subtract({days:3}));
-      });
       res.json(200, response);
 
     // return only the version number
