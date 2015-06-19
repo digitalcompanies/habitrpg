@@ -171,7 +171,7 @@ describe "Coupons", ->
           .end (res) ->
             expectCode res, 400
             expect(res.body.err).to.equal "Coupon already used"
-            User.findById user._id, (err, _user) ->
+            getUser user._id, (err, _user) ->
               gear = _user.items.gear.owned
               specialGear(gear, false)
               done()
@@ -185,7 +185,7 @@ describe "Coupons", ->
           .end (res) ->
             expectCode res, 400
             expect(res.body.err).to.equal "Invalid coupon code"
-            User.findById user._id, (err, _user) ->
+            getUser user._id, (err, _user) ->
               gear = _user.items.gear.owned
               specialGear(gear, false)
               done()

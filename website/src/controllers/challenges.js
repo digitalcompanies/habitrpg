@@ -61,18 +61,25 @@ api.get = function(req, res, next) {
   // 1) Find the sum of users.tasks.values within the challnege (eg, {'profile.name':'tyler', 'sum': 100})
   // 2) Sort by the sum
   // 3) Limit 30 (only show the 30 users currently in the lead)
-  Challenge.findById(req.params.cid)
-    .populate('members', 'profile.name _id')
-    .populate('group', '_id name type')
-    .populate('leader', 'profile.name')
-    .exec(function(err, challenge){
-      if(err) return next(err);
-      if (!challenge) return res.json(404, {err: 'Challenge ' + req.params.cid + ' not found'});
-      challenge._isMember = !!(_.find(challenge.members, function(member) {
-        return member._id === user._id;
-      }));
-      res.json(challenge);
-    });
+  async.waterfall([
+    function(cb){
+      Challenge.findById(req.params.cid)
+        .populate('members', 'profile.name _id')
+        .populate('group', '_id name type')
+        .populate('leader', 'profile.name')
+        .exec(cb);
+    },
+    function(challenge, cb){
+      challenge.populateTasks(cb);
+    }
+  ], function(err, challenge){
+    if(err) return next(err);
+    if (!challenge) return res.json(404, {err: 'Challenge ' + req.params.cid + ' not found'});
+    challenge._isMember = !!(_.find(challenge.members, function(member) {
+      return member._id === user._id;
+    }));
+    res.json(challenge);
+  })
 }
 
 api.csv = function(req, res, next) {
@@ -195,16 +202,20 @@ api.create = function(req, res, next){
       req.body.leader = user._id;
       req.body.official = user.contributor.admin && req.body.official;
       var chal = new Challenge(req.body); // FIXME sanitize
+      _.merge( chal, _.pick( req.body, 'habits dailys todos rewards'.split(' ') ) );
       chal.members.push(user._id);
       chal.save(cb);
+    }],
+    save_user: ['save_chal', function(cb, results){
+      user.save(cb);
     }],
     save_group: ['save_chal', function(cb, results){
       results.get_group.challenges.push(results.save_chal[0]._id);
       results.get_group.save(cb);
     }],
-    sync_user: ['save_group', function(cb, results){
+    sync_user: ['save_user', function(cb, results){
       // Auto-join creator to challenge (see members.push above)
-      results.save_chal[0].syncToUser(user, cb);
+      results.save_chal[0].updateAttrs(user, cb);
     }]
   }, function(err, results){
     if (err) return err.code? res.json(err.code, err) : next(err);
@@ -213,45 +224,25 @@ api.create = function(req, res, next){
   })
 }
 
+//api.deleteTask
+//api.updateTask
+//api.addTask
+
 // UPDATE
 api.update = function(req, res, next){
   var cid = req.params.cid;
-  var user = res.locals.user;
-  var before;
   async.waterfall([
     function(cb){
-      // We first need the original challenge data, since we're going to compare against new & decide to sync users
       Challenge.findById(cid, cb);
     },
-    function(_before, cb) {
-      if (!_before) return cb('Challenge ' + cid + ' not found');
-      if (_before.leader != user._id) return cb("You don't have permissions to edit this challenge");
-      // Update the challenge, since syncing will need the updated challenge. But store `before` we're going to do some
-      // before-save / after-save comparison to determine if we need to sync to users
-      before = _before;
-      var attrs = _.pick(req.body, 'name shortName description habits dailys todos rewards date'.split(' '));
-      Challenge.findByIdAndUpdate(cid, {$set:attrs}, cb);
-    },
-    function(saved, cb) {
-
-      // Compare whether any changes have been made to tasks. If so, we'll want to sync those changes to subscribers
-      if (before.isOutdated(req.body)) {
-        User.find({_id: {$in: saved.members}}, function(err, users){
-          logging.info('Challenge updated, sync to subscribers');
-          if (err) throw err;
-          _.each(users, function(user){
-            saved.syncToUser(user);
-          })
-        })
-      }
-
-      // after saving, we're done as far as the client's concerned. We kick off syncing (heavy task) in the background
-      cb(null, saved);
+    function(challenge, cb) {
+      if (!challenge) return cb({code:404, message:'Challenge ' + cid + ' not found'});
+      if (challenge.leader != res.locals.user._id) return cb({code:401, message:"You don't have permissions to edit this challenge"});
+      challenge.updateAttrs(req.body);
     }
   ], function(err, saved){
-    if(err) next(err);
+    if(err) return next(err);
     res.json(saved);
-    cid = user = before = null;
   })
 }
 

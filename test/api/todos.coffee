@@ -8,7 +8,7 @@ describe "Todos", ->
     registerNewUser done, true
 
   beforeEach (done) ->
-    User.findById user._id, (err, _user) ->
+    getUser user._id, (err, _user) ->
       user = _user
       shared.wrap user
       done()

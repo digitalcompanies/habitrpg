@@ -411,7 +411,7 @@ describe "Party", ->
                 (_user, cb) ->
 
                   # need to load the user again, since tavern boss does update after user's cron
-                  User.findById _user._id, cb
+                  getUser _user._id, cb
                 (_user, cb) ->
                   user = _user
                   Group.findById group._id, cb
@@ -448,15 +448,15 @@ describe "Party", ->
                       # need to fetch users to get updated data
                       async.parallel [
                         (cb3) ->
-                          User.findById party[0].id, (err, mbr) ->
+                          getUser party[0].id, (err, mbr) ->
                             expect(mbr.items.gear.owned.weapon_special_2).to.equal true
                             cb3()
                         (cb3) ->
-                          User.findById party[1].id, (err, mbr) ->
+                          getUser party[1].id, (err, mbr) ->
                             expect(mbr.items.gear.owned.weapon_special_2).to.equal true
                             cb3()
                         (cb3) ->
-                          User.findById party[2].id, (err, mbr) ->
+                          getUser party[2].id, (err, mbr) ->
                             expect(mbr.items.gear.owned.weapon_special_2).to.not.be.ok()
                             cb3()
                       ], cb2

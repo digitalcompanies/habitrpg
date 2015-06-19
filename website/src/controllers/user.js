@@ -71,7 +71,7 @@ var findTask = function(req, res) {
   Export it also so we can call it from deprecated.coffee
 */
 api.score = function(req, res, next) {
-  var id = req.params.id,
+  var id = req.params._id || req.params.id,
     direction = req.params.direction,
     user = res.locals.user,
     task;
@@ -600,10 +600,6 @@ api.batchUpdate = function(req, res, next) {
 
     // Fetch full user object
     }else if(response.wasModified){
-      // Preen 3-day past-completed To-Dos from Angular & mobile app
-      response.todos = _.where(response.todos, function(t) {
-        return !t.completed || (t.challenge && t.challenge.id) || moment(t.dateCompleted).isAfter(moment().subtract({days:3}));
-      });
       res.json(200, response);
 
     // return only the version number

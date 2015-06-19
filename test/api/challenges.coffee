@@ -49,7 +49,7 @@ describe "Challenges", ->
       expectCode res, 200
       async.parallel [
         (cb) ->
-          User.findById user._id, cb
+          getUser user._id, cb
         (cb) ->
           Challenge.findById res.body._id, cb
       ], (err, results) ->
@@ -72,7 +72,7 @@ describe "Challenges", ->
     challenge.todos[0].notes = "Challenge Updated Todo Notes"
     request.post(baseURL + "/challenges/" + challenge._id).send(challenge).end (res) ->
       setTimeout (->
-        User.findById user._id, (err, _user) ->
+        getUser user._id, (err, _user) ->
           expectCode res, 200
           expect(_user.dailys[_user.dailys.length - 1].text).to.equal "Updated Daily"
           expect(res.body.todos[0].notes).to.equal "Challenge Updated Todo Notes"
@@ -87,7 +87,7 @@ describe "Challenges", ->
       done()
 
   it "Complete To-Dos", (done) ->
-    User.findById user._id, (err, _user) ->
+    getUser user._id, (err, _user) ->
       u = _user
       numTasks = (_.size(u.todos))
       request.post(baseURL + "/user/tasks/" + u.todos[0].id + "/up").end (res) ->
@@ -98,7 +98,7 @@ describe "Challenges", ->
   it "Challenge deleted, breaks task link", (done) ->
     itThis = this
     request.del(baseURL + "/challenges/" + challenge._id).end (res) ->
-      User.findById user._id, (err, user) ->
+      getUser user._id, (err, user) ->
         len = user.dailys.length - 1
         daily = user.dailys[user.dailys.length - 1]
         expect(daily.challenge.broken).to.equal "CHALLENGE_DELETED"
@@ -111,7 +111,7 @@ describe "Challenges", ->
           expect(user.dailys[len].challenge.broken).to.not.exist
           request.post(baseURL + "/user/tasks/" + daily.id + "/up").end (res) ->
             setTimeout (->
-              User.findById user._id, (err, user) ->
+              getUser user._id, (err, user) ->
                 expect(user.dailys[len].challenge.broken).to.equal "CHALLENGE_DELETED"
                 done()
             ), 100 # we need to wait for challenge to update user, it's a background job for perf reasons
@@ -164,7 +164,7 @@ describe "Challenges", ->
         expect(res.body.prize).to.equal 10
         async.parallel [
           (cb) ->
-            User.findById user._id, cb
+            getUser user._id, cb
           (cb) ->
             Challenge.findById res.body._id, cb
         ], (err, results) ->
@@ -172,7 +172,7 @@ describe "Challenges", ->
           challenge = results[1]
           expect(user.balance).to.equal 5.5
           request.del(baseURL + "/challenges/" + challenge._id).end (res) ->
-            User.findById user._id, (err, _user) ->
+            getUser user._id, (err, _user) ->
               expect(_user.balance).to.equal 8
               done()
 
@@ -193,7 +193,7 @@ describe "Challenges", ->
         expect(res.body.prize).to.equal 10
         async.parallel [
           (cb) ->
-            User.findById user._id, cb
+            getUser user._id, cb
           (cb) ->
             Challenge.findById res.body._id, cb
         ], (err, results) ->
@@ -201,6 +201,6 @@ describe "Challenges", ->
           challenge = results[1]
           expect(user.balance).to.equal 5.5
           request.del(baseURL + "/challenges/" + challenge._id).end (res) ->
-            User.findById user._id, (err, _user) ->
+            getUser user._id, (err, _user) ->
               expect(_user.balance).to.equal 5.5
               done()

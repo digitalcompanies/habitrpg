@@ -9,25 +9,19 @@ api.i18n = i18n
 # little helper for large arrays of strings. %w"this that another" equivalent from Ruby, I really miss that function
 $w = api.$w = (s)->s.split(' ')
 
-api.dotSet = (obj,path,val)->
-  arr = path.split('.')
-  _.reduce arr, (curr, next, index) =>
-    if (arr.length - 1) == index
-      curr[next] = val
-    (curr[next] ?= {})
-  , obj
-api.dotGet = (obj,path)->
-  _.reduce path.split('.'), ((curr, next) => curr?[next]), obj
+api.dotSet = _.set
+api.dotGet = _.get
 
 ###
   Reflists are arrays, but stored as objects. Mongoose has a helluvatime working with arrays (the main problem for our
   syncing issues) - so the goal is to move away from arrays to objects, since mongoose can reference elements by ID
   no problem. To maintain sorting, we use these helper functions:
 ###
-api.refPush = (reflist, item, prune=0) ->
+api.refPush = (reflist, item, opts={}) ->
   item.sort = if _.isEmpty(reflist) then 0 else _.max(reflist,'sort').sort+1
-  item.id = api.uuid() unless item.id and !reflist[item.id]
-  reflist[item.id] = item
+  item._id = api.uuid() unless item._id and !reflist[item._id]
+  if opts.array then reflist.push(item) else reflist[item._id] = item
+  #todo handle opts.prune
 
 api.planGemLimits =
   convRate: 20 #how much does a gem cost?
@@ -616,6 +610,7 @@ api.wrap = (user, main=true) ->
         return cb?({code:404,message:i18n.t('messageTaskNotFound', req.language)}) unless task
         i = user[task.type + "s"].indexOf(task)
         user[task.type + "s"].splice(i, 1) if ~i
+        task.remove?()
         cb? null, {}
 
       addTask: (req, cb) ->
@@ -1074,7 +1069,8 @@ api.wrap = (user, main=true) ->
       # ------
 
       score: (req, cb) ->
-        {id, direction} = req.params # up or down
+        {direction} = req.params # up or down
+        id = req.params._id or req.params.id
         task = user.tasks[id]
         options = req.query or {}; _.defaults(options, {times:1, cron:false})
 
@@ -1640,16 +1636,21 @@ api.wrap = (user, main=true) ->
             if completed || (scheduleMisses > 0)
               _.each task.checklist, ((i)->i.completed=false;true) # this should not happen for grey tasks unless they are completed
           when 'todo'
-          #get updated value
+            # get updated value
             absVal = if (completed) then Math.abs(task.value) else task.value
             todoTally += absVal
+            # archive old ones #FIXME untested code
+            if task.completed && !task.challenge?.id && moment(task.dateCompleted).isBefore(moment().subtract({days:3}))
+              task.archived = true
+        true
 
-      user.habits.forEach (task) -> # slowly reset 'onlies' value to 0
+      _.each user.habits, (task) -> # slowly reset 'onlies' value to 0
         if task.up is false or task.down is false
           if Math.abs(task.value) < 0.1
             task.value = 0
           else
             task.value = task.value / 2
+        true
 
 
       # Finished tallying
@@ -1667,7 +1668,7 @@ api.wrap = (user, main=true) ->
       unless user.purchased?.plan?.customerId
         user.fns.preenUserHistory()
         user.markModified? 'history'
-        user.markModified? 'dailys' # covers dailys.*.history
+#        FIXME user.markModified? 'dailys' # covers dailys.*.history
 
       user.stats.buffs =
         if perfect
@@ -1734,6 +1735,8 @@ api.wrap = (user, main=true) ->
   # ----------------------------------------------------------------------
   # Virtual Attributes
   # ----------------------------------------------------------------------
+  Object.defineProperty user, 'tasks',
+    get: ->_.defaults {}, user.habits, user.dailys, user.todos, user.rewards
 
   # Aggregate all intrinsic stats, buffs, weapon, & armor into computed stats
   Object.defineProperty user, '_statsComputed',
@@ -1754,7 +1757,3 @@ api.wrap = (user, main=true) ->
       , {}
       computed.maxMP = computed.int*2 + 30
       computed
-  Object.defineProperty user, 'tasks',
-    get: ->
-      tasks = user.habits.concat(user.dailys).concat(user.todos).concat(user.rewards)
-      _.object(_.pluck(tasks, "id"), tasks)
