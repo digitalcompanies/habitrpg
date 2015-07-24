@@ -312,6 +312,7 @@ var UserSchema = new Schema({
     },
     hideHeader: {type:Boolean, 'default':false},
     skin: {type:String, 'default':'915533'},
+    eyes: {type:String, 'default':'basic'},
     shirt: {type: String, 'default': 'blue'},
     timezoneOffset: Number,
     sound: {type:String, 'default':'off', enum: ['off','danielTheBard', 'wattsTheme', 'gokulTheme']},
