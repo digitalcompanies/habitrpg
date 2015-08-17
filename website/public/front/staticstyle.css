@@ -54,20 +54,14 @@ h1, h2, h3, h4, p.sectioninfo {
 }
 
 .footer .shoutout {
-  padding:4rem 0 6rem 0;
+  padding: 4rem 0 6rem 0;
   background-color:#ebebeb;
 }
 
 .footer .shoutout h4 {
-  text-align:center;
-  padding-bottom:2rem;
+  text-align: center;
+  padding-bottom: 2rem;
 }
-
-.footer .shoutout img {
-  max-height:40px;
-  display:block;
-  margin:0 auto;
-  }
 
 .footer .footer-content {
   padding-top:2rem;
@@ -448,10 +442,9 @@ button.gamifybutton {
     margin:4rem auto 8rem auto;
   }
 
-  .footer .shoutout img {
-    margin:20px auto;
+  .footer .shoutout .col-centered {
+    margin: 20px auto;
   }
-
 }
 
 @media only screen and (max-width: 767px) {

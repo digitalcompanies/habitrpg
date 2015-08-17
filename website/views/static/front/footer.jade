@@ -1,22 +1,23 @@
 footer.footer
-  .container-fluid.shoutout
-    h4=env.t('contribUse')
+  .shoutout
+    h4.text-center=env.t('contribUse')
+
     .row
-      .col-lg-2.col-md-2.col-md-offset-1.col-sm-4.col-sm-offset-1.col-xs-6.col-xs-offset-1
+      .col-lg-2.col-md-2.col-md-offset-1.col-sm-4
         a(href='http://ionicframework.com/')
-          img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/presslogos/ionic-logo-horizontal-transparent.png')
-      .col-lg-2.col-lg-offset-0.col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-1.col-xs-6.col-xs-offset-1
+          .logo-ionic.col-centered
+      .col-lg-2.col-md-2.col-md-offset-0.col-sm-4
         a(href='https://www.jetbrains.com/webstorm/')
-          img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/presslogos/logo_webstorm.png')
-      .col-lg-2.col-lg-offset-0.col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-1.col-xs-6.col-xs-offset-1
+          .logo-webstorm.col-centered
+      .col-lg-2.col-md-2.col-md-offset-0.col-sm-4
         a(href='http://github.com/')
-          img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/presslogos/GitHub_Logo.png')
-      .col-lg-2.col-lg-offset-0.col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-1.col-xs-6.col-xs-offset-1
+          .logo-github.col-centered
+      .col-lg-2.col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-2
         a(href='https://trello.com/')
-          img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/presslogos/trello-logo-blue.png')
-      .col-lg-2.col-lg-offset-0.col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-1.col-xs-6.col-xs-offset-1
+          .logo-trello.col-centered
+      .col-lg-2.col-md-2.col-md-offset-0.col-sm-4
         a(href='https://slack.com/')
-          img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/presslogos/landing_slack_hash_wordmark_logo.png')
+          .logo-slack.col-centered
 
   .row.footer-content
     include ../../shared/footer
