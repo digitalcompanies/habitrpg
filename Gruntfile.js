@@ -20,8 +20,9 @@ module.exports = function(grunt) {
   var sprite = {
     frontPage: {
       src: 'website/public/front/images/**/*.png',
-      dest: 'website/build/frontpage/spritesmith.png',
-      destCss: 'website/build/frontpage/spritesmith.css',
+      dest: 'website/build/frontpage/images.png',
+      destCss: 'website/build/frontpage/images.css',
+      imgPath: 'https://d2afqr2xdmyzvu.cloudfront.net/front/images.png',
       engine: 'phantomjssmith',
       algorithm: 'binary-tree',
       padding:1,
