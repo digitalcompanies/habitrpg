@@ -359,27 +359,8 @@ button.gamifybutton {
   height:100%;
 }
 
-#quest .quest-friend {
-  position:absolute;
-  width:45%;
-  display:block;
-  top:20%;
-}
-
-
-#quest .quest-friend-img{
-  position:relative;
-  display:block;
-  float:left;
-  margin-top:10px;
-  width:150px;
-}
-
-#quest .quest-friend-health {
-  position:relative;
-  top:-10%;
-  left:45%;
-  width:200px;
+.quests-player, .quests-death {
+  margin-top: 3rem;
 }
 
 #features {
