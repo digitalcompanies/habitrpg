@@ -30,9 +30,9 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
 
   body(ng-controller='AuthCtrl')
     include ./login-modal
-    include ../shared/avatar/index
-    include ../shared/mixins
-    include ../shared/modals/members
+    include ../../shared/avatar/index
+    include ../../shared/mixins
+    include ../../shared/modals/members
     .mobile-container
       div(ng-init='Analytics.track({"hitType":"pageview","eventCategory":"page","eventAction":"landing page","page":"/static/front"});')
       header#header
@@ -575,7 +575,7 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
                 img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/presslogos/landing_slack_hash_wordmark_logo.png')
 
         .row.footer-content
-          include ../shared/footer
+          include ../../shared/footer
 
     script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js')
     script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap.min.js')
