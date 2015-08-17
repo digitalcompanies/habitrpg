@@ -253,14 +253,7 @@ button.gamifybutton {
 }
 
 .feature-img {
-  display:block;
-  height:80px;
-  text-align: center;
-  line-height:100px;
-}
-
-.feature-img img {
-  max-height:100px;
+  margin: 0 auto;
 }
 
 .carousel-content .usetweet {
