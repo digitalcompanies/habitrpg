@@ -22,16 +22,11 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
     //if lt IE 9
       script(src='//html5shim.googlecode.com/svn/trunk/html5.js')
 
-
     link(rel='stylesheet', type='text/css', href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css')
 
     script(type='text/javascript').
       window.env = !{JSON.stringify(env._.pick(env, env.clientVars))};
-    != env.getManifestFiles("tmp_static_front")
-
-    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js')
-    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap.min.js')
-    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js')
+    !=env.getManifestFiles("tmp_static_front")
 
   body(ng-controller='AuthCtrl')
     include ./login-modal
@@ -55,28 +50,22 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
             // Collect the nav links, forms, and other content for toggling
             #bs-example-navbar-collapse-1.collapse.navbar-collapse
               ul.nav.navbar-nav.navbar-right
-                li
-                  a(href='/static/features')=env.t('companyAbout')
-                li
-                  a(href='/static/plans')=env.t('groupPlans')
-                li
-                  a(href='http://blog.habitrpg.com/')=env.t('companyBlog')
-                li
-                  a(href='/static/press-kit')=env.t('presskit')
-                li
-                  a(href='/static/contact')=env.t('contactUs')
-                li
-                  button#header-play-button.btn.btn-primary.navbar-btn.navbar-right(ng-click='playButtonClick()')= env.t('playButtonFull')
+                li: a(href='/static/features')=env.t('companyAbout')
+                li: a(href='/static/plans')=env.t('groupPlans')
+                li: a(href='http://blog.habitrpg.com/')=env.t('companyBlog')
+                li: a(href='/static/press-kit')=env.t('presskit')
+                li: a(href='/static/contact')=env.t('contactUs')
+                li: button#header-play-button.btn.btn-primary.navbar-btn.navbar-right(ng-click='playButtonClick()')=env.t('playButtonFull')
+
       #intro
         h1=env.t('motivate1')
         img.center-block.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/intro.png')
         // insert intro images
         .introcall.bg-success
-          h4= env.t('joinOthers')
+          h4=env.t('joinOthers')
             small
-              button#play-btn.btn.btn-primary.btn-lg.gamifybutton(ng-click='playButtonClick()')= env.t('free')
-        .presslogos.text-center
-          = env.t('featuredIn')
+              button#play-btn.btn.btn-primary.btn-lg.gamifybutton(ng-click='playButtonClick()')=env.t('free')
+        .presslogos.text-center=env.t('featuredIn')
           br
           img(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/presslogos/lifehacker.png')
           img(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/presslogos/nyt-logo.png')
@@ -85,17 +74,18 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
           img(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/presslogos/Cnetlogo.png')
           img(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/presslogos/Fast-Company-logo.png')
           img(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/presslogos/kickstarter-logo.png')
+
       #intro-text
         .container-fluid
           .row
             .col-md-8.col-md-offset-2
-              p.lead.text-center
-                = env.t('leadText')
+              p.lead.text-center=env.t('leadText')
+
       section#testimonial-carousel.bg-info
         .container-fluid
           .row
             .col-md-3.col-md-offset-1
-              h2= env.t('testimonialHeading')
+              h2=env.t('testimonialHeading')
               img.img-say.img-responsive.visible-lg-block(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/uses/publicSpaces.png')
             // Testimonials
             .col-md-8.col-sm-10.col-sx-10
@@ -117,40 +107,36 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
                     blockquote
                       .row
                         .col-sm-8.col-sm-offset-2
-                          p
-                          = env.t('dragonsilverQuote')
+                          p=env.t('dragonsilverQuote')
                           small Drag0nsilver
                   // Quote 2
                   .item
                     blockquote
                       .row
                         .col-sm-8.col-sm-offset-2
-                          p
-                          = env.t('frabjabulousQuote')
+                          p=env.t('frabjabulousQuote')
                           small frabjabulous
                   // Quote 3
                   .item
                     blockquote
                       .row
                         .col-sm-8.col-sm-offset-2
-                          p
-                          = env.t('andeeliaoQuote')
+                          p=env.t('andeeliaoQuote')
                           small AndeeLiao
                   .item
                     blockquote
                       .row
                         .col-sm-8.col-sm-offset-2
-                          p
-                          = env.t('alexandraQuote')
+                          p=env.t('alexandraQuote')
                           small _AlexandraSo_
                 // Carousel Buttons Next/Prev
                 a.left.carousel-control(data-slide='prev', href='#quote-carousel')
                   i.fa.fa-chevron-left
                 a.right.carousel-control(data-slide='next', href='#quote-carousel')
                   i.fa.fa-chevron-right
-        button.btn.btn-primary.btn-lg.gamifybutton.fixedcta(ng-click='playButtonClick()')= env.t('gamifyButton')
+        button.btn.btn-primary.btn-lg.gamifybutton.fixedcta(ng-click='playButtonClick()')=env.t('gamifyButton')
       section#uses
-        h2= env.t('examplesHeading')
+        h2=env.t('examplesHeading')
         .container-fluid
           #myCarousel.carousel.slide(data-interval='10000', data-ride='carousel')
             ul.nav.nav-pills.nav-justified
@@ -169,119 +155,114 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
             // Wrapper for slides
             .carousel-inner(style='z-index:0;')
               .item.active.work-use
-                h3
-                  = env.t('work')
+                h3=env.t('work')
                   br
                   small
-                    a(href='/static/plans')= env.t('businessText')
+                    a(href='/static/plans')=env.t('businessText')
                 .carousel-content.row
                   .sampletasks.col-lg-4.col-md-6.col-sm-12.col-xs-12
-                    h4= env.t('sampleHabits')
+                    h4=env.t('sampleHabits')
                     div(style='width:100%; background-color: rgb(252, 229, 205); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(219, 120, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('businessSample1')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('businessSample1')
                     br
                     div(style='width:100%; background-color: rgb(201, 218, 248); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(90, 98, 223); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('businessSample2')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('businessSample2')
                     br
                     div(style='width:100%; background-color: #d9ead3; color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(113, 176, 91); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('businessSample3')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('businessSample3')
                     br
                     div(style='width:100%; background-color: rgb(255, 242, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(255, 207, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('businessSample4')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('businessSample4')
                     br
                     div(style='width:100%; background-color: rgb(244, 204, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(220, 93, 93); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; background-color: rgb(220, 93, 93); border-right: 0px none;') -
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('businessSample5')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('businessSample5')
                   img.sample-img.visible-lg-inline-block(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/uses/coding.png')
                   .usetweet-groups.col-lg-5.col-md-6.visible-lg-inline-block.visible-md-inline-block
                     .usetweet-group
                       img(data-toggle='tooltip', data-placement='top', title='frabjabulous', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/frabjabulous.png')
                       .usetweet.tweet.popover.right
                         .arrow
-                        .popover-content
-                          = env.t('frabjabulousQuote')
+                        .popover-content=env.t('frabjabulousQuote')
                     .usetweet-group
                       img(data-toggle='tooltip', data-placement='top', title='_AlexandraSo_', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/AlexandraSo.png')
                       .usetweet.tweet.popover.right
                         .arrow
-                        .popover-content
-                          = env.t('alexandraQuote')
+                        .popover-content=env.t('alexandraQuote')
               // End item
               .item.health-use
-                h3= env.t('health')
+                h3=env.t('health')
                 .carousel-content.row
                   .sampletasks.col-lg-4.col-md-6.col-sm-12.col-xs-12
-                    h4= env.t('sampleHabits')
+                    h4=env.t('sampleHabits')
                     div(style='width:100%; background-color: #d9ead3; color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(113, 176, 91); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; background-color: rgb(113, 176, 91); border-right: 0px none;') -
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('healthSample1')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('healthSample1')
                     br
                     div(style='width:100%; background-color: rgb(244, 204, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(220, 93, 93); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; background-color: rgb(220, 93, 93); border-right: 0px none;') -
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('healthSample2')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('healthSample2')
                     br
                     div(style='width:100%; background-color: #d9ead3; color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(113, 176, 91); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; background-color: rgb(113, 176, 91); border-right: 0px none;') -
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('healthSample3')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('healthSample3')
                     br
                     div(style='width:100%; background-color: rgb(255, 242, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(255, 207, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; background-color: rgb(255, 207, 66); border-right: 0px none;') -
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('healthSample4')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('healthSample4')
                     br
                     div(style='width:100%; background-color: rgb(255, 242, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(255, 207, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('healthSample5')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('healthSample5')
                   img.sample-img.visible-lg-inline-block(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/uses/clipart-rosemonkeyct-meditation.png')
                   .usetweet-groups.col-lg-5.col-md-6.visible-lg-inline-block.visible-md-inline-block
                     .usetweet-group
                       img(data-toggle='tooltip', data-placement='top', title='EvaGantz', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/EvaGantz.png')
                       .usetweet.tweet.popover.right
                         .arrow
-                        .popover-content
-                          = env.t('evagantzQuote')
+                        .popover-content=env.t('evagantzQuote')
                     .usetweet-group
                       img(data-toggle='tooltip', data-placement='top', title='supermouse35', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/supermouse35.png')
                       .usetweet.tweet.popover.right
                         .arrow
-                        .popover-content
-                          = env.t('supermouse35Quote')
+                        .popover-content=env.t('supermouse35Quote')
               // End Item
               .item.team-use
-                h3= env.t('teams')
+                h3=env.t('teams')
                 .carousel-content.row
                   .sampletasks.col-lg-4.col-md-6.col-sm-12.col-xs-12
-                    h4= env.t('sampleToDo')
+                    h4=env.t('sampleToDo')
                     div(style='width:100%; background-color: rgb(252, 229, 205); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(219, 120, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);')
                         span(style='padding: 0.5em 0px 0em 0em; color: #666;') &#x2610;
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('teamSample1')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('teamSample1')
                     br
                     div(style='width:100%; background-color: rgb(255, 242, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(255, 207, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);')
                         span(style='padding: 0.5em 0px 0em 0em; color: #666;') &#x2610;
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('teamSample2')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('teamSample2')
                     br
                     div(style='width:100%; background-color: rgb(244, 204, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(220, 93, 93); border-right: 1px solid rgba(0, 0, 0, 0.25);')
                         span(style='padding: 0.5em 0px 0em 0em; color: #666;') &#x2610;
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('teamSample3')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('teamSample3')
                     br
                   img.sample-img.visible-lg-inline-block(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/uses/publicSpaces.png')
                   .usetweet-groups.col-lg-5.col-md-6.visible-lg-inline-block.visible-md-inline-block
@@ -289,151 +270,146 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
                       img(data-toggle='tooltip', data-placement='top', title='Althaire', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/Althaire.png')
                       .usetweet.tweet.popover.right
                         .arrow
-                        .popover-content
-                          = env.t('althaireQuote')
+                        .popover-content=env.t('althaireQuote')
               // End Item
               .item.school-use
-                h3= env.t('school')
+                h3=env.t('school')
                 .carousel-content.row
                   .sampletasks.col-lg-4.col-md-6.col-sm-12.col-xs-12
-                    h4= env.t('sampleHabits')
+                    h4=env.t('sampleHabits')
                     div(style='width:100%; background-color: rgb(255, 242, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(255, 207, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('schoolSample1')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('schoolSample1')
                     br
                     div(style='width:100%; background-color: #d9ead3; color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(113, 176, 91); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('schoolSample2')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('schoolSample2')
                     br
                     div(style='width:100%; background-color: rgb(255, 242, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(255, 207, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('schoolSample3')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('schoolSample3')
                     br
                     div(style='width:100%; background-color: rgb(244, 204, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(220, 93, 93); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; background-color: rgb(220, 93, 93); border-right: 0px none;') -
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('schoolSample4')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('schoolSample4')
                     br
                     div(style='width:100%; background-color: rgb(201, 218, 248); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(90, 98, 223); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; background-color: rgb(90, 98, 223); border-right: 0px none;') -
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('schoolSample5')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('schoolSample5')
                   img.sample-img.visible-lg-inline-block(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/uses/reading.png')
                   .usetweet-groups.col-lg-5.col-md-6.visible-lg-inline-block.visible-md-inline-block
                     .usetweet-group
                       img(data-toggle='tooltip', data-placement='top', title='InfH', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/InfH.png')
                       .usetweet.tweet.popover.right
                         .arrow
-                        .popover-content= env.t('infhQuote')
+                        .popover-content=env.t('infhQuote')
                     .usetweet-group
                       img(data-toggle='tooltip', data-placement='top', title='Drei-M', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/Drei-M.png')
                       .usetweet.tweet.popover.right
                         .arrow
-                        .popover-content
-                          = env.t('dreimQuote')
+                        .popover-content=env.t('dreimQuote')
               // End Item
               .item.improvement-use
-                h3= env.t('goals')
+                h3=env.t('goals')
                 .carousel-content.row
                   .sampletasks.col-lg-4.col-md-6.col-sm-12.col-xs-12
-                    h4= env.t('sampleDailies')
+                    h4=env.t('sampleDailies')
                     div(style='width:100%; background-color: rgb(255, 242, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(255, 207, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('goalSample1')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('goalSample1')
                     br
                     div(style='width:100%; background-color: #d9ead3; color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(113, 176, 91); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; background-color: rgb(113, 176, 91); border-right: 0px none;') -
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('goalSample2')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('goalSample2')
                     br
                     div(style='width:100%; background-color: rgb(255, 242, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(255, 207, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('goalSample3')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('goalSample3')
                     br
                     div(style='width:100%; background-color: rgb(255, 242, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(255, 207, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('goalSample4')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('goalSample4')
                     br
                     div(style='width:100%; background-color: rgb(201, 218, 248); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(90, 98, 223); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('goalSample5')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('goalSample5')
                   img.sample-img.visible-lg-inline-block(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/uses/gaining_an_achievement_by_cosmic_caterpillar-d7uyv5z.png')
                   .usetweet-groups.col-lg-5.col-md-6.visible-lg-inline-block.visible-md-inline-block
                     .usetweet-group
                       img(data-toggle='tooltip', data-placement='top', title='Kazui', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/Kazui.png')
                       .usetweet.tweet.popover.right
                         .arrow
-                        .popover-content
-                          = env.t('kazuiQuote')
+                        .popover-content=env.t('kazuiQuote')
               // End Item
               .item.housework-use
-                h3= env.t('chores')
+                h3=env.t('chores')
                 .carousel-content.row
                   .sampletasks.col-lg-4.col-md-6.col-sm-12.col-xs-12
-                    h4= env.t('sampleDailies')
+                    h4=env.t('sampleDailies')
                     div(style='width:100%; background-color: rgb(255, 242, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(255, 207, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('choreSample1')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('choreSample1')
                     br
                     div(style='width:100%; background-color: #d9ead3; color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(113, 176, 91); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; background-color: rgb(113, 176, 91); border-right: 0px none;') -
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('choreSample2')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('choreSample2')
                     br
                     div(style='width:100%; background-color: #d9ead3; color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(113, 176, 91); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; background-color: rgb(113, 176, 91); border-right: 0px none;') -
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('choreSample3')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('choreSample3')
                     br
                     div(style='width:100%; background-color: rgb(255, 242, 204); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(255, 207, 66); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('choreSample4')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('choreSample4')
                     br
                     div(style='width:100%; background-color: rgb(201, 218, 248); color: rgb(51, 51, 51); text-align:center; padding: 0px; line-height: 1.62765; list-style: none outside none; padding: 0px; height: 2.3em; min-height: 1.62765em; margin-bottom:0.75em; margin:0px; box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;')
                       .task-btn(style='display: inline-block; width: 1.62765em; height: 1.62765em; padding: 0px; margin:0px; line-height: 1.62765; text-align: center; color: rgb(34, 34, 34); float:left; cursor: pointer; vertical-align: top; left:0px; position:relative; background-color: rgb(90, 98, 223); border-right: 1px solid rgba(0, 0, 0, 0.25);') +
                       | &nbsp;
-                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')= env.t('choreSample5')
+                      .task-desc(style='display: inline-block; font-family: Lato,sans-serif; padding: 0.6em 0px 0em 1em; letter-spacing: normal; float:left; word-wrap: break-word;')=env.t('choreSample5')
                   img.sample-img.visible-lg-inline-block(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/uses/dusting_by_leephon.png')
                   .usetweet-groups.col-lg-5.col-md-6.visible-lg-inline-block.visible-md-inline-block
                     .usetweet-group
                       img(data-toggle='tooltip', data-placement='top', title='autumnesquirrel', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/autumnesquirrel.png')
                       .usetweet.tweet.popover.right
                         .arrow
-                        .popover-content= env.t('autumnesquirrelQuote')
+                        .popover-content=env.t('autumnesquirrelQuote')
                     .usetweet-group
                       img(data-toggle='tooltip', data-placement='top', title='irishfeet123', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/irishfeet123.png')
                       .usetweet.tweet.popover.right
                         .arrow
-                        .popover-content
-                          = env.t('irishfeet123Quote')
+                        .popover-content=env.t('irishfeet123Quote')
               // End Item
           // End Carousel
-        button.btn.btn-primary.btn-lg.gamifybutton.fixedcta(ng-click='playButtonClick()')= env.t('gamifyButton')
+        button.btn.btn-primary.btn-lg.gamifybutton.fixedcta(ng-click='playButtonClick()')=env.t('gamifyButton')
       section#rewards.bg-warning.container-fluid
         .row
           .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
-            h2.headline= env.t('rewardHeading')
+            h2.headline=env.t('rewardHeading')
         .row
           .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12.col-xs-12
-            p.sectioninfo
-              = env.t('rewardByline1')
+            p.sectioninfo=env.t('rewardByline1')
               br
               br
-              = env.t('rewardByline2')
+              =env.t('rewardByline2')
             .scrolltweet.hidden-xs.hidden-sm
               img.scrolltweet-image(data-toggle='tooltip', data-placement='top', title='Elmi', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/Elmi.png')
               .tweet.popover.right.pull-right
                 .arrow
-                .popover-content= env.t('elmiQuote')
+                .popover-content=env.t('elmiQuote')
           .col-lg-4.col-md-4.col-lg-offset-1.col-sm-8.well.col-xs-8.col-xs-offset-2.col-sm-offset-2.well-lg
             .avatarscroll
               h2
@@ -446,45 +422,42 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
               h2
                 span.glyphicon.glyphicon-arrow-down
               img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/TVreward.png')
-          button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')= env.t('gamifyButton')
+          button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')=env.t('gamifyButton')
       section#levels.container-fluid
         .row
           .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
-            h2.headline= env.t('unlockHeadline')
+            h2.headline=env.t('unlockHeadline')
         .row
           .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
-            p.sectioninfo
-              = env.t('unlockByline1')
+            p.sectioninfo=env.t('unlockByline1')
               br
               br
-              = env.t('unlockByline2')
+              =env.t('unlockByline2')
             .scrolltweet.hidden-xs.hidden-sm
               img.scrolltweet-image(data-toggle='tooltip', data-placement='top', title='16bitFil', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/16bitFil.png')
               .tweet.popover.right.pull-right
                 .arrow
-                .popover-content
-                  = env.t('sixteenBitFilQuote')
+                .popover-content=env.t('sixteenBitFilQuote')
           .col-lg-4.col-md-4.col-lg-offset-1.col-sm-8.well.col-xs-8.col-xs-offset-2.col-sm-offset-2
             .avatarscroll
               img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/avatar/avatarstatic.png')
               h2
                 span.glyphicon.glyphicon-arrow-down
               img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/SAMPLEadventurers.png')
-          button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')= env.t('gamifyButton')
+          button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')=env.t('gamifyButton')
       section#health.bg-danger.container-fluid
         .row
           .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
-            h2.headline= env.t('punishHeading1')
+            h2.headline=env.t('punishHeading1')
         .row
           .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
-            h2= env.t('punishHeading2')
-            p.sectioninfo= env.t('punishByline')
+            h2=env.t('punishHeading2')
+            p.sectioninfo=env.t('punishByline')
             .scrolltweet.hidden-xs.hidden-sm
               img.scrolltweet-image(data-toggle='tooltip', data-placement='top', title='Zelah Meyer', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/Zelah_Meyer.png')
               .tweet.popover.right.pull-right
                 .arrow
-                .popover-content
-                  = env.t('zelahQuote')
+                .popover-content=env.t('zelahQuote')
           .col-lg-4.col-md-4.col-lg-offset-1.col-sm-8.well.col-xs-8.col-xs-offset-2.col-sm-offset-2.well-lg
             h2
               span.glyphicon.glyphicon-unchecked
@@ -502,24 +475,21 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
               .meter.health
                 .bar
                   div(style='width:50%;') &nbsp;
-          button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')= env.t('gamifyButton')
+          button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')=env.t('gamifyButton')
       section#quest.container-fluid
         .row
           .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
-            h2.headline= env.t('questHeading1')
+            h2.headline=env.t('questHeading1')
         .row
           .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
-            h2= env.t('questHeading2')
-            p.sectioninfo
-              = env.t('questByline1')
-              br
-              = env.t('questByline2')
+            h2=env.t('questHeading2')
+            p.sectioninfo=env.t('questByline1')
+              br=env.t('questByline2')
             .scrolltweet.hidden-xs.hidden-sm
               img.scrolltweet-image(data-toggle='tooltip', data-placement='top', title='skysailor', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/skysailor.png')
               .tweet.popover.right.pull-right
                 .arrow
-                .popover-content
-                  = env.t('skysailorQuote')
+                .popover-content=env.t('skysailorQuote')
           .col-lg-4.col-md-6.col-md-offset-1.col-lg-offset-1.col-sm-10.well.col-xs-10.col-xs-offset-1.col-sm-offset-1.well-lg
             img.clearfix.img-responsive.center-block(style='padding-bottom:30px;', src="https://d2afqr2xdmyzvu.cloudfront.net/front/images/Quest_dilatory_dragonSmall.png")
             .row
@@ -544,52 +514,49 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
                       div(style='width:0%;') &nbsp;
                 .quest-friend-img
                   img(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/party/GrimReaper.png')
-          button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')= env.t('gamifyButton')
+          button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')=env.t('gamifyButton')
       section#features.bg-info.container-fluid
         .row
-          h2= env.t('featuresHeading')
+          h2=env.t('featuresHeading')
         .row
           .col-md-4.col-md-offset-2.col-sm-6
             .feature-img
               img.center-block.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/Mount.png')
             .featuretext
-              h4= env.t('featurePetHeading')
-              p
-                = env.t('featurePetByline')
+              h4=env.t('featurePetHeading')
+              p=env.t('featurePetByline')
           .col-md-4.col-sm-6
             .feature-img.center-block
               img(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/achievement-triadbingo.png')
               img(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/achievement-perfect.png')
             .featuretext
-              h4= env.t('featureAchievementHeading')
-              p= env.t('featureAchievementByline')
+              h4=env.t('featureAchievementHeading')
+              p=env.t('featureAchievementByline')
         .row
           .col-md-4.col-md-offset-2.col-sm-6
             .feature-img
               img.center-block.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/Promo_springclasses2015.png')
             .featuretext
-              h4= env.t('featureEquipHeading')
-              p
-                = env.t('featureEquipByline')
+              h4=env.t('featureEquipHeading')
+              p=env.t('featureEquipByline')
           .col-md-4.col-sm-6
             .feature-img
               img.center-block.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/Party-Header.png')
             .featuretext
-              h4= env.t('featureSocialHeading')
-              p
-                = env.t('featureSocialByline')
-          button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')= env.t('gamifyButton')
+              h4=env.t('featureSocialHeading')
+              p=env.t('featureSocialByline')
+          button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')=env.t('gamifyButton')
       #footercall
         .container-fluid
           .row
             .col-md-10
-              h3= env.t('joinOthers')
+              h3=env.t('joinOthers')
           .row
             .col-md-4.col-md-offset-4
-              button.btn.btn-primary.btn-lg.btn-block(ng-click='playButtonClick()')= env.t('free')
+              button.btn.btn-primary.btn-lg.btn-block(ng-click='playButtonClick()')=env.t('free')
       footer.footer
         .container-fluid.shoutout
-          h4= env.t('contribUse')
+          h4=env.t('contribUse')
           .row
             .col-lg-2.col-md-2.col-md-offset-1.col-sm-4.col-sm-offset-1.col-xs-6.col-xs-offset-1
               a(href='http://ionicframework.com/')
@@ -609,6 +576,10 @@ html(ng-app='habitrpg', ng-controller='RootCtrl')
 
         .row.footer-content
           include ../shared/footer
+
+    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js')
+    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap.min.js')
+    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js')
 
     // Footer scripts
     // Use carousel initialize
