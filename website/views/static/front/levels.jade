@@ -1,23 +1,26 @@
 section#levels.container-fluid
   .row
-    .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
+    .col-lg-5.col-md-offset-1.col-md-5.col-sm-12
       h2.headline=env.t('unlockHeadline')
+
   .row
-    .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
+    .col-lg-5.col-md-offset-1.col-md-5.col-sm-12
       p.sectioninfo=env.t('unlockByline1')
         br
         br
         =env.t('unlockByline2')
+
       .scrolltweet.hidden-xs.hidden-sm
         img.scrolltweet-image(data-toggle='tooltip', data-placement='top', title='16bitFil', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/16bitFil.png')
         .tweet.popover.right.pull-right
           .arrow
           .popover-content=env.t('sixteenBitFilQuote')
-    .col-lg-4.col-md-4.col-lg-offset-1.col-sm-8.well.col-xs-8.col-xs-offset-2.col-sm-offset-2
+
+    .col-md-4.col-md-offset-1.well.col-xs-8.col-xs-offset-2
       .avatarscroll
-        img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/avatar/avatarstatic.png')
+        .levels-staticavatar.col-centered
         h2
           span.glyphicon.glyphicon-arrow-down
-        img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/SAMPLEadventurers.png')
+        .levels-classes.col-centered
     button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')=env.t('gamifyButton')
 
