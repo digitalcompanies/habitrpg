@@ -16,7 +16,18 @@ module.exports = function(grunt) {
   var COUNT = 7;//Math.ceil( (totalDims.width * totalDims.height) / (1024*1024*3) );
   //console.log({totalDims:totalDims,COUNT:COUNT});
 
-  var sprite = {};
+
+  var sprite = {
+    frontPage: {
+      src: 'website/public/front/images/**/*.png',
+      dest: 'website/build/frontpage/spritesmith.png',
+      destCss: 'website/build/frontpage/spritesmith.css',
+      engine: 'phantomjssmith',
+      algorithm: 'binary-tree',
+      padding:1,
+      cssTemplate: 'common/css/css.template.mustache'
+    }
+  };
   _.times(COUNT, function(i){
     var sliced = images.slice(i * (images.length/COUNT), (i+1) * images.length/COUNT)
     sprite[''+i] = {
