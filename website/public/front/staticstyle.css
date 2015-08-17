@@ -29,6 +29,10 @@ section .well {
   text-align: center;
 }
 
+#intro .static-header-intro {
+  max-width: 100%;
+}
+
 #intro h1 {
   font-size:30px;
   margin:3rem 0 4rem 0;
