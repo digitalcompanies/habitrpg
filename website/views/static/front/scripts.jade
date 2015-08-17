@@ -1,0 +1,41 @@
+script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js')
+script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap.min.js')
+script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js')
+
+// Footer scripts
+// Use carousel initialize
+script(type='text/javascript').
+  $(document).ready( function() {
+    var clickEvent = false;
+    $('#myCarousel').on('click', '.nav a', function() {
+      clickEvent = true;
+      $('#myCarousel .nav li').removeClass('active');
+      $(this).parent().addClass('active');
+    }).on('slid.bs.carousel', function(e) {
+    if(!clickEvent) {
+      var count = $('#myCarousel .nav').children().length -1;
+      var current = $('#myCarousel .nav li.active');
+      current.removeClass('active').next().addClass('active');
+      var id = parseInt(current.data('slide-to'));
+      if(count == id) {
+        $('#myCarousel .nav li').first().addClass('active');
+      }
+    }
+    clickEvent = false;
+    });
+  });
+// Tooltips
+script(type='text/javascript').
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="popover"]').popover()
+  })
+// Hack fix for carousel (http://stackoverflow.com/a/22182184/362790)
+script.
+  angular.module('ui.bootstrap.carousel', ['ui.bootstrap.transition'])
+  .controller('CarouselController', ['$scope', '$timeout', '$transition', '$q', function ($scope, $timeout, $transition, $q) {
+  }]).directive('carousel', [function () {
+    return {}
+  }]);
+
+

@@ -1,0 +1,55 @@
+section#testimonial-carousel.bg-info
+  .container-fluid
+    .row
+      .col-md-3.col-md-offset-1
+        h2=env.t('testimonialHeading')
+        img.img-say.img-responsive.visible-lg-block(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/uses/publicSpaces.png')
+      // Testimonials
+      .col-md-8.col-sm-10.col-sx-10
+        #quote-carousel.carousel.slide(data-interval='10000', data-ride='carousel')
+          // Bottom Carousel Indicators
+          ol.carousel-indicators
+            li.active(data-target='#quote-carousel', data-slide-to='0')
+              img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/Drag0nsilver.png', alt='')
+            li(data-target='#quote-carousel', data-slide-to='1')
+              img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/frabjabulous.png', alt='')
+            li(data-target='#quote-carousel', data-slide-to='2')
+              img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/AndeeLiao.png', alt='')
+            li(data-target='#quote-carousel', data-slide-to='3')
+              img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/AlexandraSo.png', alt='')
+          // Carousel Slides / Quotes
+          .carousel-inner.text-center
+            // Quote 1
+            .item.active
+              blockquote
+                .row
+                  .col-sm-8.col-sm-offset-2
+                    p=env.t('dragonsilverQuote')
+                    small Drag0nsilver
+            // Quote 2
+            .item
+              blockquote
+                .row
+                  .col-sm-8.col-sm-offset-2
+                    p=env.t('frabjabulousQuote')
+                    small frabjabulous
+            // Quote 3
+            .item
+              blockquote
+                .row
+                  .col-sm-8.col-sm-offset-2
+                    p=env.t('andeeliaoQuote')
+                    small AndeeLiao
+            .item
+              blockquote
+                .row
+                  .col-sm-8.col-sm-offset-2
+                    p=env.t('alexandraQuote')
+                    small _AlexandraSo_
+          // Carousel Buttons Next/Prev
+          a.left.carousel-control(data-slide='prev', href='#quote-carousel')
+            i.fa.fa-chevron-left
+          a.right.carousel-control(data-slide='next', href='#quote-carousel')
+            i.fa.fa-chevron-right
+  button.btn.btn-primary.btn-lg.gamifybutton.fixedcta(ng-click='playButtonClick()')=env.t('gamifyButton')
+

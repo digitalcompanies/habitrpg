@@ -1,0 +1,29 @@
+section#rewards.bg-warning.container-fluid
+  .row
+    .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12
+      h2.headline=env.t('rewardHeading')
+  .row
+    .col-lg-5.col-lg-offset-1.col-md-5.col-sm-12.col-xs-12
+      p.sectioninfo=env.t('rewardByline1')
+        br
+        br
+        =env.t('rewardByline2')
+      .scrolltweet.hidden-xs.hidden-sm
+        img.scrolltweet-image(data-toggle='tooltip', data-placement='top', title='Elmi', src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/testimonials/Elmi.png')
+        .tweet.popover.right.pull-right
+          .arrow
+          .popover-content=env.t('elmiQuote')
+    .col-lg-4.col-md-4.col-lg-offset-1.col-sm-8.well.col-xs-8.col-xs-offset-2.col-sm-offset-2.well-lg
+      .avatarscroll
+        h2
+          span.glyphicon.glyphicon-check
+        h2
+          span.glyphicon.glyphicon-arrow-down
+        img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/misc/shop_gold.png')
+        img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/misc/shop_gold.png')
+        img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/misc/shop_gold.png')
+        h2
+          span.glyphicon.glyphicon-arrow-down
+        img.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/TVreward.png')
+    button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')=env.t('gamifyButton')
+

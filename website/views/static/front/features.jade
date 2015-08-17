@@ -1,0 +1,40 @@
+section#features.bg-info.container-fluid
+  .row
+    h2=env.t('featuresHeading')
+  .row
+    .col-md-4.col-md-offset-2.col-sm-6
+      .feature-img
+        img.center-block.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/Mount.png')
+      .featuretext
+        h4=env.t('featurePetHeading')
+        p=env.t('featurePetByline')
+    .col-md-4.col-sm-6
+      .feature-img.center-block
+        img(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/achievement-triadbingo.png')
+        img(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/achievement-perfect.png')
+      .featuretext
+        h4=env.t('featureAchievementHeading')
+        p=env.t('featureAchievementByline')
+  .row
+    .col-md-4.col-md-offset-2.col-sm-6
+      .feature-img
+        img.center-block.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/Promo_springclasses2015.png')
+      .featuretext
+        h4=env.t('featureEquipHeading')
+        p=env.t('featureEquipByline')
+    .col-md-4.col-sm-6
+      .feature-img
+        img.center-block.img-responsive(src='https://d2afqr2xdmyzvu.cloudfront.net/front/images/Party-Header.png')
+      .featuretext
+        h4=env.t('featureSocialHeading')
+        p=env.t('featureSocialByline')
+    button.btn.btn-primary.btn-lg.fixedcta.gamifybutton(ng-click='playButtonClick()')=env.t('gamifyButton')
+#footercall
+  .container-fluid
+    .row
+      .col-md-10
+        h3=env.t('joinOthers')
+    .row
+      .col-md-4.col-md-offset-4
+        button.btn.btn-primary.btn-lg.btn-block(ng-click='playButtonClick()')=env.t('free')
+
