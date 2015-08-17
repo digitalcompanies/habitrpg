@@ -252,10 +252,6 @@ button.gamifybutton {
   margin:4rem auto;
 }
 
-.feature-img {
-  margin: 0 auto;
-}
-
 .carousel-content .usetweet {
   float:right;
   max-width:300px;
@@ -337,10 +333,6 @@ button.gamifybutton {
 }
 
 /* Health bar CSS*/
-.health-progress {
-  display:block;
-}
-
 .meter-label {
   float:left;
   background-color:#b0c3c7;
@@ -353,6 +345,7 @@ button.gamifybutton {
   color:#fff;
   text-shadow:-1px -1px 1px #2f3f42,1px -1px 1px #2f3f42,-1px 1px 1px #2f3f42,1px 1px 1px #2f3f42;
 }
+
 .health .bar {
   margin-left:40px;
   height:28px;
@@ -360,6 +353,7 @@ button.gamifybutton {
   background-color:#fff;
   outline:#999 solid 1px;
 }
+
 .health .bar div {
   background:#da5353;
   height:100%;
