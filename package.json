@@ -87,7 +87,7 @@
     "www.habitrpg.com"
   ],
   "engines": {
-    "node": "0.10.x"
+    "node": "4.1.x"
   },
   "scripts": {
     "test": "gulp test",
