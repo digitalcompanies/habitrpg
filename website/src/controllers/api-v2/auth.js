@@ -109,7 +109,6 @@ api.registerUser = function(req, res, next) {
       // existing user, allow them to add local authentication
       if (data.findFacebook) {
         data.findFacebook.auth.local = newUser.auth.local;
-        data.findFacebook.registeredThrough = newUser.registeredThrough;
         data.findFacebook.save(cb);
       // new user, register them
       } else {
@@ -198,7 +197,8 @@ api.loginSocial = function(req, res, next) {
         },
         auth: {
           timestamps: {created: +new Date(), loggedIn: +new Date()}
-        }
+        },
+        registeredThrough: req.headers['x-client']
       };
       user.auth[network] = prof;
       user = new User(user);

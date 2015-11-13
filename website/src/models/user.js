@@ -610,7 +610,6 @@ function _populateDefaultsForNewUser(user) {
     user.flags.showTour = false;
 
     var tourSections = [
-      'showTour',
       'intro',
       'classes',
       'stats',
