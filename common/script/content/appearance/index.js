@@ -3,6 +3,7 @@ import shirts from './shirt.js';
 import skins from './skin.js';
 import sizes from './size.js';
 import backgrounds from './backgrounds.js';
+import timeTravelBackgrounds from './timetravel-backgrounds.js';
 import {forOwn, clone} from 'lodash';
 
 let reorderedBgs = {};
@@ -19,6 +20,16 @@ forOwn(backgrounds, function restructureBackgroundSet (value, key) {
   });
 });
 
+forOwn(timeTravelBackgrounds, function restructureBackgroundSet (value, key) {
+  forOwn(value, function restructureBackground (bgObject, bgKey) {
+    let bg = clone(bgObject);
+    bg.set = {
+      text: key,
+      key,
+    };
+    reorderedBgs[bgKey] = bg;
+  });
+});
 
 let appearances = {
   hair,

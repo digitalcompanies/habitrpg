@@ -1,5 +1,6 @@
 let shared = require('../../common/script/index.js');
 
+/* eslint-disable camelcase */
 describe('user.ops.hourglassPurchase', () => {
   let user;
 
@@ -11,6 +12,7 @@ describe('user.ops.hourglassPurchase', () => {
         hatchingPotions: {},
       },
       purchased: {
+        background: {},
         plan: {
           consecutive: {
             trinkets: 0,
@@ -26,7 +28,7 @@ describe('user.ops.hourglassPurchase', () => {
     context('failure conditions', () => {
       it('does not allow purchase of unsupported item types', (done) => {
         user.ops.hourglassPurchase({params: {type: 'hatchingPotions', key: 'Base'}}, (response) => {
-          expect(response.message).to.eql('Item type not supported for purchase with Mystic Hourglass. Allowed types: ["pets","mounts"]');
+          expect(response.message).to.eql('Item type not supported for purchase with Mystic Hourglass. Allowed types: ["pets","mounts","backgrounds"]');
           expect(user.items.hatchingPotions).to.eql({});
           done();
         });
@@ -114,6 +116,56 @@ describe('user.ops.hourglassPurchase', () => {
           expect(response.message).to.eql('Purchased an item using a Mystic Hourglass!');
           expect(user.purchased.plan.consecutive.trinkets).to.eql(1);
           expect(user.items.mounts).to.eql({'MantisShrimp-Base': true});
+          done();
+        });
+      });
+    });
+  });
+
+  context('Time Travel Backgrounds', () => {
+    context('failure conditions', () => {
+      it('does not grant background without two Mystic Hourglasses', (done) => {
+        user.purchased.plan.consecutive.trinkets = 1;
+
+        user.ops.hourglassPurchase({params: {type: 'backgrounds', key: 'steampunk_one'}}, (response) => {
+          expect(response.message).to.eql('You don\'t have enough Mystic Hourglasses.');
+          expect(user.purchased.background).to.eql({});
+          done();
+        });
+      });
+
+      it('does not grant background that has already been purchased', (done) => {
+        user.purchased.plan.consecutive.trinkets = 2;
+        user.purchased.background = {
+          steampunk_one: true,
+        };
+
+        user.ops.hourglassPurchase({params: {type: 'backgrounds', key: 'steampunk_one'}}, (response) => {
+          expect(response.message).to.eql('Background already owned.');
+          expect(user.purchased.plan.consecutive.trinkets).to.eql(2);
+          done();
+        });
+      });
+
+      it('does not grant background that is not a Time Travel background', (done) => {
+        user.purchased.plan.consecutive.trinkets = 2;
+
+        user.ops.hourglassPurchase({params: {type: 'backgrounds', key: 'floating_islands'}}, (response) => {
+          expect(response.message).to.eql('Background not available for purchase with Mystic Hourglasses.');
+          expect(user.purchased.plan.consecutive.trinkets).to.eql(2);
+          done();
+        });
+      });
+    });
+
+    context('successful purchase', () => {
+      it('purchases a Time Travel background', (done) => {
+        user.purchased.plan.consecutive.trinkets = 2;
+
+        user.ops.hourglassPurchase({params: {type: 'backgrounds', key: 'steampunk_one'}}, (response) => {
+          expect(response.message).to.eql('Purchased an item using a Mystic Hourglass!');
+          expect(user.purchased.plan.consecutive.trinkets).to.eql(0);
+          expect(user.purchased.background).to.eql({steampunk_one: true});
           done();
         });
       });

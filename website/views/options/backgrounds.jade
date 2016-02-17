@@ -1,0 +1,23 @@
+mixin backgrounds(mobile, timeTravel)
+  div(class=mobile ? 'padding' : 'container-fluid')
+      // backgrounds are listed in content file in chronological order, but
+      // we want to display them with most recent at top (reversed)
+      - if (timeTravel) {
+        - var bgContent = env.Content.timeTravelBackgrounds; }
+      - else {
+        - var bgContent = env.Content.backgrounds; }
+      - var bgsKeys = Object.keys(bgContent);
+      - for (var i = bgsKeys.length-1; i >= 0; i--) {
+        - var k = bgsKeys[i], bgs = env.Content.bgContent[k];
+        li.customize-menu
+          menu(label=env.t(k))
+            span(ng-hide="ownsSet('background',#{JSON.stringify(bgs)})")
+              +gemCost(7)
+                button.btn.btn-xs(ng-click="unlock(setKeys('background',#{JSON.stringify(bgs)}))")!= env.t('unlockSet',{cost:15}) + ' <span class="Pet_Currency_Gem1x inline-gems"/>'
+            each bg,k in bgs
+              button.customize-option(type='button', class='background_#{k}', ng-class="user.purchased.background.#{k} ? 'background-unlocked' : 'background-locked'", ng-click='unlock("background.#{k}")', popover-title=bg.text(env.language.code), popover=bg.notes(env.language.code),popover-trigger='mouseenter')
+                i.glyphicon.glyphicon-lock(ng-if="!user.purchased.background.#{k}")
+      - }
+
+script(type='text/ng-template', id='partials/options.profile.backgrounds.html')
+  +backgrounds()

@@ -313,6 +313,14 @@ habitrpg.controller("InventoryCtrl",
       user.ops.hourglassPurchase({params:{type:type,key:key}});
     };
 
+    $scope.clickTimeTravelBackground = function(set,key) {
+      if (!Content.timeTravelBackgrounds[set][key]) return window.env.t('backgroundsNotAllowedHourglass');
+      var hourglassPrice = Content.timeTravelBackgrounds[set][key].hourglassPrice;
+      if (user.purchased.plan.consecutive.trinkets < hourglassPrice) return user.ops.hourglassPurchase({params:{type:'backgrounds',key:key}});
+      if (!window.confirm(window.env.t('hourglassBuyItemConfirmPlural', {hourglasses:hourglassPrice}))) return;
+      user.ops.hourglassPurchase({params:{type:'backgrounds',key:key}});
+    };
+
     function _updateDropAnimalCount(items) {
       $scope.petCount = Shared.count.beastMasterProgress(items.pets);
       $scope.mountCount = Shared.count.mountMasterProgress(items.mounts);

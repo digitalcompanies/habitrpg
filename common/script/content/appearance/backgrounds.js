@@ -298,6 +298,7 @@ let backgrounds = {
     },
   },
 };
+
 /* eslint-enable quote-props */
 
 forOwn(backgrounds, function prefillBackgroundSet (value) {

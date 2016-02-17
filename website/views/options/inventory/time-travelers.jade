@@ -19,6 +19,21 @@
 
   .row
     .col-md-12
+      div.container-fluid
+        - var bgsKeys = Object.keys(env.Content.timeTravelBackgrounds);
+        - for (var i = bgsKeys.length-1; i >= 0; i--) {
+          - var bgSet = bgsKeys[i], bgs = env.Content.timeTravelBackgrounds[bgSet];
+          li.customize-menu
+            menu(label=env.t(bgSet))
+              each bg,k in bgs
+                button.customize-option(type='button', class='background_#{k}', 
+                ng-class="user.purchased.background.#{k} ? 'background-unlocked' : 'background-locked'", 
+                ng-click='clickTimeTravelBackground("#{bgSet}","#{k}")',
+                popover-title=bg.text(env.language.code), 
+                popover=bg.notes(env.language.code),
+                popover-trigger='mouseenter')
+                  i.glyphicon.glyphicon-lock(ng-if="!user.purchased.background.#{k}")
+        - }
       li.customize-menu.inventory-gear
         each prepend, type in {pets:'Pet-', mounts:'Mount_Head_'}
           menu.pets-menu(label=env.t('#{type}'), ng-if='!hasAllTimeTravelerItemsOfType("#{type}")')

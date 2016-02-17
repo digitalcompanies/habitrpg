@@ -109,11 +109,14 @@
     "notEnoughHourglasses": "You don't have enough Mystic Hourglasses.",
     "hourglassBuyEquipSetConfirm": "Buy this full set of items for 1 Mystic Hourglass?",
     "hourglassBuyItemConfirm": "Buy this item for 1 Mystic Hourglass?",
+    "hourglassBuyItemConfirmPlural": "Buy this item for <%= hourglasses %> Mystic Hourglasses?",
     "petsAlreadyOwned": "Pet already owned.",
     "mountsAlreadyOwned": "Mount already owned.",
+    "backgroundsAlreadyOwned": "Background already owned.",
     "typeNotAllowedHourglass": "Item type not supported for purchase with Mystic Hourglass. Allowed types: ",
     "petsNotAllowedHourglass": "Pet not available for purchase with Mystic Hourglass.",
     "mountsNotAllowedHourglass": "Mount not available for purchase with Mystic Hourglass.",
-    "hourglassPurchase": "Purchased an item using a Mystic Hourglass!",
+    "backgroundsNotAllowedHourglass": "Background not available for purchase with Mystic Hourglasses.",
+    "hourglassPurchase": "Purchased an item using Mystic Hourglasses!",
     "hourglassPurchaseSet": "Purchased an item set using a Mystic Hourglass!"
 }

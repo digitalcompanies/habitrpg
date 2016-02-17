@@ -1528,24 +1528,41 @@ api.wrap = function(user, main) {
             message: i18n.t(type + 'NotAllowedHourglass', req.language)
           }) : void 0;
         }
-        if (user.items[type][key]) {
-          return typeof cb === "function" ? cb({
-            code: 403,
-            message: i18n.t(type + 'AlreadyOwned', req.language)
-          }) : void 0;
-        }
-        if (!(user.purchased.plan.consecutive.trinkets > 0)) {
-          return typeof cb === "function" ? cb({
-            code: 403,
-            message: i18n.t('notEnoughHourglasses', req.language)
-          }) : void 0;
-        }
-        user.purchased.plan.consecutive.trinkets--;
-        if (type === 'pets') {
-          user.items.pets[key] = 5;
-        }
-        if (type === 'mounts') {
-          user.items.mounts[key] = true;
+        if (type === 'backgrounds') {
+          if (user.purchased.background[key]) {
+            return typeof cb === "function" ? cb({
+              code: 403,
+              message: i18n.t(type + 'AlreadyOwned', req.language)
+            }) : void 0;
+          }
+          if (!(user.purchased.plan.consecutive.trinkets > 1)) {
+            return typeof cb === "function" ? cb({
+              code: 403,
+              message: i18n.t('notEnoughHourglasses', req.language)
+            }) : void 0;
+          }
+          user.purchased.plan.consecutive.trinkets = user.purchased.plan.consecutive.trinkets - 2;
+          user.purchased.background[key] = true;
+        } else {
+          if (user.items[type][key]) {
+            return typeof cb === "function" ? cb({
+              code: 403,
+              message: i18n.t(type + 'AlreadyOwned', req.language)
+            }) : void 0;
+          }
+          if (!(user.purchased.plan.consecutive.trinkets > 0)) {
+            return typeof cb === "function" ? cb({
+              code: 403,
+              message: i18n.t('notEnoughHourglasses', req.language)
+            }) : void 0;
+          }
+          user.purchased.plan.consecutive.trinkets--;
+          if (type === 'pets') {
+            user.items.pets[key] = 5;
+          }
+          if (type === 'mounts') {
+            user.items.mounts[key] = true;
+          }
         }
         analyticsData = {
           uuid: user._id,
@@ -1560,7 +1577,7 @@ api.wrap = function(user, main) {
         return typeof cb === "function" ? cb({
           code: 200,
           message: i18n.t('hourglassPurchase', req.language)
-        }, _.pick(user, $w('items purchased.plan.consecutive'))) : void 0;
+        }, _.pick(user, $w('items purchased.background purchased.plan.consecutive'))) : void 0;
       },
       sell: function(req, cb) {
         var key, ref, type;

@@ -21,7 +21,8 @@ import mysterySets from './mystery-sets';
 import gear from './gear';
 
 import appearances from './appearance';
-import backgrounds from './appearance/backgrounds.js'
+import backgrounds from './appearance/backgrounds.js';
+import timeTravelBackgrounds from './appearance/timetravel-backgrounds.js';
 
 api.mystery = mysterySets;
 
@@ -1036,12 +1037,18 @@ api.specialMounts = {
 api.timeTravelStable = {
   pets: {
     'Mammoth-Base': t('mammoth'),
-    'MantisShrimp-Base': t('mantisShrimp')
+    'MantisShrimp-Base': t('mantisShrimp'),
+    'Phoenix-Base': t('phoenix'),
   },
   mounts: {
     'Mammoth-Base': t('mammoth'),
-    'MantisShrimp-Base': t('mantisShrimp')
-  }
+    'MantisShrimp-Base': t('mantisShrimp'),
+    'Phoenix-Base': t('phoenix'),
+  },
+  backgrounds: {
+    'steampunk_one': t('backgroundSteampunkOneText'),
+    'steampunk_two': t('backgroundSteampunkTwoText'),
+  },
 };
 
 api.dropHatchingPotions = {
@@ -3133,6 +3140,8 @@ api.questsByLevel = _.sortBy(api.quests, function(quest) {
 api.appearances = appearances;
 
 api.backgrounds = backgrounds;
+
+api.timeTravelBackgrounds = timeTravelBackgrounds;
 
 api.subscriptionBlocks = {
   basic_earned: {
