@@ -1,5 +1,6 @@
 {
   "backgrounds": "Backgrounds",
+  "background": "background",
 
   "backgrounds062014": "SET 1: Released June 2014",
   "backgroundBeachText":"Beach",
@@ -169,7 +170,7 @@
   "backgroundGrandStaircaseText": "Grand Staircase",
   "backgroundGrandStaircaseNotes": "Stride down the Grand Staircase.",
 
-  "backgrounds023016": "SET 10,828: Released February 3016",
+  "backgrounds023016": "Background Set 10,828: Released February 3016",
   "backgroundSteampunkCityscapeText": "Steampunk Cityscape",
   "backgroundSteampunkCityscapeNotes": "Travel through time to a Steampunk Cityscape!",
   "backgroundSteampunkClocktowerText": "Steampunk Clocktower",

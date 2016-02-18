@@ -1,6 +1,6 @@
 habitrpg.controller("InventoryCtrl",
-  ['$rootScope', '$scope', 'Shared', '$window', 'User', 'Content', 'Analytics', 'Quests', 'Stats', 'Social',
-  function($rootScope, $scope, Shared, $window, User, Content, Analytics, Quests, Stats, Social) {
+  ['$rootScope', '$scope', 'Shared', '$window', 'User', 'Content', 'Analytics', 'Quests', 'Stats', 'Social', 'Inventory',
+  function($rootScope, $scope, Shared, $window, User, Content, Analytics, Quests, Stats, Social, Inventory) {
 
     var user = User.user;
 
@@ -16,6 +16,10 @@ habitrpg.controller("InventoryCtrl",
 
     // Functions from Quests service
     $scope.lockQuest = Quests.lockQuest;
+
+    // Functions from Inventory service
+    $scope.ownsSet = Inventory.ownsSet;
+    $scope.unlock = Inventory.unlock;
 
     $scope.buyQuest = function(questScroll) {
       Quests.buyQuest(questScroll)
@@ -287,7 +291,8 @@ habitrpg.controller("InventoryCtrl",
     $scope.hasAllTimeTravelerItems = function() {
       return ($scope.hasAllTimeTravelerItemsOfType('mystery') &&
         $scope.hasAllTimeTravelerItemsOfType('pets') &&
-        $scope.hasAllTimeTravelerItemsOfType('mounts'));
+        $scope.hasAllTimeTravelerItemsOfType('mounts') &&
+        $scope.hasAllTimeTravelerItemsOfType('backgrounds'));
     };
 
     $scope.hasAllTimeTravelerItemsOfType = function(type) {
@@ -296,6 +301,12 @@ habitrpg.controller("InventoryCtrl",
         var keys = Object.keys(itemsLeftInTimeTravelerStore);
 
         return keys.length === 0;
+      }
+
+      if (type === 'backgrounds') {
+        var timeTravelBGs = Content.backgrounds.backgrounds023016;
+
+        return $scope.ownsSet('background', timeTravelBGs);
       }
 
       if (type === 'pets' || type === 'mounts') {
@@ -308,6 +319,7 @@ habitrpg.controller("InventoryCtrl",
     };
 
     $scope.clickTimeTravelItem = function(type,key) {
+      if (type === 'background' && user.purchased.background[key]) return $scope.unlock('background.' + key);
       if (user.purchased.plan.consecutive.trinkets < 1) return user.ops.hourglassPurchase({params:{type:type,key:key}});
       if (!window.confirm(window.env.t('hourglassBuyItemConfirm'))) return;
       user.ops.hourglassPurchase({params:{type:type,key:key}});

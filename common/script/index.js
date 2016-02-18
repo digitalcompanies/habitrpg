@@ -1516,23 +1516,32 @@ api.wrap = function(user, main) {
       hourglassPurchase: function(req, cb, analytics) {
         var analyticsData, key, ref, type;
         ref = req.params, type = ref.type, key = ref.key;
-        if (!content.timeTravelStable[type]) {
-          return typeof cb === "function" ? cb({
-            code: 403,
-            message: i18n.t('typeNotAllowedHourglass', req.language) + JSON.stringify(_.keys(content.timeTravelStable))
-          }) : void 0;
-        }
-        if (!_.contains(_.keys(content.timeTravelStable[type]), key)) {
-          return typeof cb === "function" ? cb({
-            code: 403,
-            message: i18n.t(type + 'NotAllowedHourglass', req.language)
-          }) : void 0;
-        }
-        if (user.items[type][key]) {
-          return typeof cb === "function" ? cb({
-            code: 403,
-            message: i18n.t(type + 'AlreadyOwned', req.language)
-          }) : void 0;
+        if (type === 'background') {
+          if (!content.appearances.background[key] || !content.appearances.background[key].timetravel) {
+            return typeof cb === "function" ? cb({
+              code: 403,
+              message: i18n.t('backgroundNotAllowedHourglass', req.language)
+            }) : void 0;
+          }
+        } else {
+          if (!content.timeTravelStable[type]) {
+            return typeof cb === "function" ? cb({
+              code: 403,
+              message: i18n.t('typeNotAllowedHourglass', req.language) + JSON.stringify(_.keys(content.timeTravelStable))
+            }) : void 0;
+          }
+          if (!_.contains(_.keys(content.timeTravelStable[type]), key)) {
+            return typeof cb === "function" ? cb({
+              code: 403,
+              message: i18n.t(type + 'NotAllowedHourglass', req.language)
+            }) : void 0;
+          }
+          if (user.items[type][key]) {
+            return typeof cb === "function" ? cb({
+              code: 403,
+              message: i18n.t(type + 'AlreadyOwned', req.language)
+            }) : void 0;
+          }
         }
         if (!(user.purchased.plan.consecutive.trinkets > 0)) {
           return typeof cb === "function" ? cb({
@@ -1547,6 +1556,9 @@ api.wrap = function(user, main) {
         if (type === 'mounts') {
           user.items.mounts[key] = true;
         }
+        if (type === 'background') {
+          user.purchased.background[key] = true;
+        }
         analyticsData = {
           uuid: user._id,
           itemKey: key,
@@ -1560,7 +1572,7 @@ api.wrap = function(user, main) {
         return typeof cb === "function" ? cb({
           code: 200,
           message: i18n.t('hourglassPurchase', req.language)
-        }, _.pick(user, $w('items purchased.plan.consecutive'))) : void 0;
+        }, _.pick(user, $w('purchased items'))) : void 0;
       },
       sell: function(req, cb) {
         var key, ref, type;

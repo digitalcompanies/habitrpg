@@ -54,6 +54,7 @@
             "js/services/questServices.js",
             "js/services/socialServices.js",
             "js/services/statServices.js",
+            "js/services/inventoryServices.js",
 
             "js/filters/money.js",
             "js/filters/roundLargeNumbers.js",

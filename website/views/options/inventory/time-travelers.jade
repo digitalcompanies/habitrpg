@@ -1,3 +1,9 @@
+mixin hourglassCost(cost, type)
+  small.cost
+    | #{cost} <span class="inventory_special_trinket_1x inline-gems"></span> /
+    = ' ' + env.t(type)
+    block
+
 .container-fluid
   .stable.row: .col-xs-12
     - var hasTrinkets = 'user.purchased.plan.consecutive.trinkets > 0'
@@ -18,16 +24,29 @@
     .alert.alert-info(ng-if='hasAllTimeTravelerItems()')=env.t('timeTravelersAlreadyOwned')
 
   .row
-    .col-md-12
+    .col-md-6
+      - var bgs = env.Content.backgrounds.backgrounds023016;
+        li.customize-menu
+          menu(label=env.t('backgrounds023016'))
+            span(ng-hide="ownsSet('background',#{JSON.stringify(bgs)})")
+              +hourglassCost(1,'background')
+            each bg,k in bgs
+              button.customize-option(type='button', class='background_#{k}', ng-class="user.purchased.background.#{k} ? 'background-unlocked' : 'background-locked'", ng-click='clickTimeTravelItem("background","#{k}")', popover-title=bg.text(env.language.code), popover=bg.notes(env.language.code),popover-trigger='mouseenter')
+                i.glyphicon.glyphicon-lock(ng-if="!user.purchased.background.#{k}")
       li.customize-menu.inventory-gear
-        each prepend, type in {pets:'Pet-', mounts:'Mount_Head_'}
+        each prepend, type in {pets:'Pet-', mounts:'Mount_Icon_'}
           menu.pets-menu(label=env.t('#{type}'), ng-if='!hasAllTimeTravelerItemsOfType("#{type}")')
+            +hourglassCost(1,'item')
             div(ng-repeat='(item, text) in Content.timeTravelStable["#{type}"]', style='margin-top:0')
               button.pet-button(class='#{prepend}{{::item}}', style='margin-top:0',
-                ng-if='!user.items["#{type}"][item]',
+                ng-hide='user.items["#{type}"][item]',
                 popover='{{::text()}}', popover-trigger='mouseenter',
                 popover-placement='right', popover-append-to-body='true',
                 ng-click='clickTimeTravelItem("#{type}",item)')
+    .col-md-6
+      li.customize-menu.inventory-gear(ng-if='!hasAllTimeTravelerItemsOfType("mystery")')
+        menu.pets-menu(label=env.t('equipment'))
+          +hourglassCost(1,'set')
       li.customize-menu.inventory-gear
         menu.pets-menu(label='{{::set.text()}}', ng-repeat='set in Content.timeTravelerStore(user.items.gear.owned)')
           div(ng-repeat='item in set.items')

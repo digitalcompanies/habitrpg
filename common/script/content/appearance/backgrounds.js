@@ -297,6 +297,18 @@ let backgrounds = {
       notes: t('backgroundGrandStaircaseNotes'),
     },
   },
+  backgrounds023016: {
+    steampunk_cityscape: {
+      text: t('backgroundSteampunkCityscapeText'),
+      notes: t('backgroundSteampunkCityscapeNotes'),
+      timetravel: true,
+    },
+    steampunk_clocktower: {
+      text: t('backgroundSteampunkClocktowerText'),
+      notes: t('backgroundSteampunkClocktowerNotes'),
+      timetravel: true,
+    },
+  },
 };
 /* eslint-enable quote-props */
 
