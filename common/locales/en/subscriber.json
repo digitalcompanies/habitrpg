@@ -116,5 +116,6 @@
     "mountsNotAllowedHourglass": "Mount not available for purchase with Mystic Hourglass.",
     "backgroundNotAllowedHourglass": "Background not available for purchase with Mystic Hourglass.",
     "hourglassPurchase": "Purchased an item using a Mystic Hourglass!",
-    "hourglassPurchaseSet": "Purchased an item set using a Mystic Hourglass!"
+    "hourglassPurchaseSet": "Purchased an item set using a Mystic Hourglass!",
+    "visitTimeTravelers": "Visit the Time Travelers to obtain this item!"
 }

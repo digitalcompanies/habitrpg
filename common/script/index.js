@@ -1558,6 +1558,9 @@ api.wrap = function(user, main) {
         }
         if (type === 'background') {
           user.purchased.background[key] = true;
+          if (typeof user.markModified === "function") {
+            user.markModified("purchased.background");
+          }
         }
         analyticsData = {
           uuid: user._id,
@@ -1679,11 +1682,20 @@ api.wrap = function(user, main) {
         }, user.items) : void 0;
       },
       unlock: function(req, cb, analytics) {
-        var alreadyOwns, analyticsData, cost, fullSet, k, path, split, v;
+        var alreadyOwns, analyticsData, bg, cost, fullSet, k, path, split, v;
         path = req.query.path;
         fullSet = ~path.indexOf(",");
         cost = ~path.indexOf('background.') ? fullSet ? 3.75 : 1.75 : fullSet ? 1.25 : 0.5;
         alreadyOwns = !fullSet && user.fns.dotGet("purchased." + path) === true;
+        if (!alreadyOwns && path.indexOf('background.') > -1) {
+          bg = path.slice(11);
+          if (content.appearances.background[bg].timetravel) {
+            return typeof cb === "function" ? cb({
+              code: 401,
+              message: i18n.t('visitTimeTravelers', req.language)
+            }) : void 0;
+          }
+        }
         if ((user.balance < cost || !user.balance) && !alreadyOwns) {
           return typeof cb === "function" ? cb({
             code: 401,

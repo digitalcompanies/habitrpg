@@ -285,9 +285,9 @@ mixin backgrounds(mobile)
       - var bgsKeys = Object.keys(env.Content.backgrounds);
       - for (var i = bgsKeys.length-1; i >= 0; i--) {
         - var k = bgsKeys[i], bgs = env.Content.backgrounds[k];
-        li.customize-menu(ng-hide = '"#{k}" === "backgrounds023016"')
+        li.customize-menu(ng-hide = '"#{k}" === "backgrounds023016" && !user.purchased.background.steampunk_clocktower && !user.purchased.background.steampunk_cityscape')
           menu(label=env.t(k))
-            span(ng-hide="ownsSet('background',#{JSON.stringify(bgs)})")
+            span(ng-hide="ownsSet('background',#{JSON.stringify(bgs)}) || '#{k}' === 'backgrounds023016'")
               +gemCost(7)
                 button.btn.btn-xs(ng-click="unlock(setKeys('background',#{JSON.stringify(bgs)}))")!= env.t('unlockSet',{cost:15}) + ' <span class="Pet_Currency_Gem1x inline-gems"/>'
             each bg,k in bgs
