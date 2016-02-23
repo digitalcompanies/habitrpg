@@ -16,7 +16,7 @@
 
     function ownsSet(type,_set) {
       return !_.find(_set,function(v,k){
-        return !user.purchased[type][k];
+        return !user.purchased || !user.purchased[type] || !user.purchased[type][k];
       });
     }
 
